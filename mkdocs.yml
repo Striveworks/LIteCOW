@@ -1,0 +1,32 @@
+site_name: ICOW
+site_description: 'Release and use ML Models seemlessly'
+repo_name: 'chariot/icow'
+repo_url: 'https://gitlab.striveworks.us/chariot/icow'
+copyright: 'Copyright &copy; 2021 Striveworks'
+docs_dir: 'docs/content'
+extra_css:
+  - extra.css
+
+nav:
+  - Home: index.md
+  - Overview: overview.md
+
+theme:
+  name: material
+  custom_dir: docs/content/overrides
+  palette:
+    primary: white
+  icon:
+    logo: material/console-line
+  features:
+    - tabs
+    - instant
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
