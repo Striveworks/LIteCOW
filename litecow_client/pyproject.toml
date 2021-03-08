@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "litecow_client"
+version = "0.1.0"
+description = ""
+authors = ["Striveworks"]
+
+[tool.poetry.dependencies]
+python = "*"
+pillow = "*"
+numpy = "*"
+litecow_common = { path = "../litecow_common" }
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
