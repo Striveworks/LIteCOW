@@ -1,6 +1,6 @@
 site_name: ICOW
 site_description: 'Release and use ML Models seemlessly'
-repo_name: 'chariot/icow'
+repo_name: 'chariot/icow-light'
 repo_url: 'https://gitlab.striveworks.us/chariot/icow'
 copyright: 'Copyright &copy; 2021 Striveworks'
 docs_dir: 'docs/content'
@@ -11,7 +11,10 @@ extra_css:
 nav:
   - Home: index.md
   - Overview: overview.md
-  - Getting Started: setup.md
+  - Getting Started:
+    - Sandbox: setup.md
+    - Installation: install.md
+    - ICOW Python Client: pycow.md
 
 theme:
   name: material
@@ -20,15 +23,20 @@ theme:
     primary: white
   icon:
     logo: material/console-line
+  favicon: images/favicon.ico
   features:
-    - tabs
-    - instant
+    - navigation.instant
+    - navigation.expand
+
+plugins: []
 
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed
+  - toc:
+      permalink: true
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg

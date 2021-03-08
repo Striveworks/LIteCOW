@@ -1,7 +1,5 @@
 # ICOW Service Install
 
-## Install Guide
-
 To install ICOW you need to have a k8s or similar cluster setup to deploy knative and ultimately icow to. If you don't please follow [this guide for bootstrapping a kind cluster](https://kind.sigs.k8s.io/docs/user/quick-start/#installation). For a regular k8s cluster you should find somewhat parallel instructions at the [following knative guide](https://knative.dev/docs/install/any-kubernetes-cluster/).
 
 1. Create a cluster config based on [Step 1 of the knative tutorial](https://knative.dev/blog/1/01/01/how-to-set-up-a-local-knative-environment-with-kind-and-without-dns-headaches/#step-1-setting-up-your-kubernetes-deployment-using-kind) with the filename of `clusterconfig.yaml`. The only change should be from `kind.sigs.k8s.io/v1alpha3` to `4` as seen below.
