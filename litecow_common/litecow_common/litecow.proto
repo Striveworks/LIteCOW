@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+/* Inference with Collected Onnx Weights service definition */
+service ICOW {
+  // get compute vision inference
+  rpc get_cv_inference(ComputerVisionRequest) returns (ResponseDict) {};
+}
+
+message ComputerVisionRequest {
+  string model_key = 1; // s3 model key to the desired model in storage
+  string model_version = 2; // optional version of the model to use
+  repeated bytes images_bytes = 3; // repeated bytes representing the images to run inference on
+}
+
+/* ResponseDict represents a json encoded response for any calls to the service */
+message ResponseDict {
+  string response = 1; // string encoded json response
+}
