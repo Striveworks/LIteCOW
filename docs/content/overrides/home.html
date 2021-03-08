@@ -1,328 +1,448 @@
-
 {% extends "main.html" %}
 
 <!-- Render hero under tabs -->
 {% block tabs %}
-  {{ super() }}
+{{ super() }}
 
-  <!-- Additional styles for landing page -->
+<!-- Additional styles for landing page -->
 <style>
-
-/* Apply box shadow on smaller screens that don't display tabs */
-@media only screen and (max-width: 1220px) {
-  .md-header {
-    box-shadow: 0 0 .2rem rgba(0,0,0,.1),0 .2rem .4rem rgba(0,0,0,.2);
-    transition: color 250ms,background-color 250ms,box-shadow 250ms;
+  /* Apply box shadow on smaller screens that don't display tabs */
+  @media only screen and (max-width: 1220px) {
+    .md-header {
+      box-shadow: 0 0 .2rem rgba(0, 0, 0, .1), 0 .2rem .4rem rgba(0, 0, 0, .2);
+      transition: color 250ms, background-color 250ms, box-shadow 250ms;
+    }
   }
-}
 
-/* Hide main content for now */
-.md-content {
-  display: none;
-}
-
-/* Hide table of contents */
-@media screen and (min-width: 60em) {
-  .md-sidebar--secondary {
+  /* Hide main content for now */
+  .md-content {
     display: none;
   }
-}
 
-/* Hide navigation */
-@media screen and (min-width: 76.25em) {
-  .md-sidebar--primary {
-    display: none;
+  /* Hide table of contents */
+  @media screen and (min-width: 60em) {
+    .md-sidebar--secondary {
+      display: none;
+    }
   }
-}
 
-/* Get started button */
-.md-typeset .md-button--primary {
+  /* Hide navigation */
+  @media screen and (min-width: 76.25em) {
+    .md-sidebar--primary {
+      display: none;
+    }
+  }
+
+  /* Get started button */
+  .md-typeset .md-button--primary {
     color: var(--md-primary-fg-color);
     background-color: var(--md-primary-bg-color);
     border-color: var(--md-primary-bg-color);
-}
-.md-typeset .md-button--primary:hover {
-  color: var(--md-primary-bg-color);
-  background-color: var(--md-primary-fg-color);
-  border-color: var(--md-primary-bg-color);
-}
+  }
 
-.tx-hero {
-  max-width: 700px;
-  display: flex;
-  padding: .4rem;
-  margin: 0 auto;
-  text-align: center;
-}
-.tx-hero h1 {
-  font-weight: 700;
-  font-size: 38px;
-  line-height: 46px;
-  color: rgb(38, 38, 38);
-}
-.tx-hero p {
-  color: rgb(92, 92, 92);
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 32px;
-}
-.tx-hero__image {
-  max-width: 1000px;
-  min-width: 600px;
-  width: 100%;
-  height: auto;
-  margin: 0 auto;
-  display: flex;
-  align-items: stretch;
-}
+  .md-typeset .md-button--primary:hover {
+    color: var(--md-primary-bg-color);
+    background-color: var(--md-primary-fg-color);
+    border-color: var(--md-primary-bg-color);
+  }
 
-.tx-hero__image img {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-}
+  .tx-hero {
+    max-width: 700px;
+    display: flex;
+    padding: .4rem;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-/* Secondary content styles */
-.secondary-section {
-  background: rgb(245, 245, 245) none repeat scroll 0% 0%;
-  border-top: 1px solid rgb(222, 222, 222);
-  border-bottom: 1px solid rgb(222, 222, 222)
-}
-@media screen and (max-width: 1012px) {
+  .tx-hero h1 {
+    font-weight: 700;
+    font-size: 38px;
+    line-height: 46px;
+    color: rgb(38, 38, 38);
+  }
+
+  .tx-hero p {
+    color: rgb(92, 92, 92);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+  }
+
+  .tx-hero__image {
+    max-width: 1000px;
+    min-width: 600px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .tx-hero__image img {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+  }
+
+  /* Secondary content styles */
   .secondary-section {
-    display: block;
+    background: rgb(245, 245, 245) none repeat scroll 0% 0%;
+    border-top: 1px solid rgb(222, 222, 222);
+    border-bottom: 1px solid rgb(222, 222, 222)
   }
-}
 
-.secondary-section .g {
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0px 40px;
-  max-width: 1280px;
-}
+  @media screen and (max-width: 1012px) {
+    .secondary-section {
+      display: block;
+    }
+  }
 
-.secondary-section .g .section {
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 30px;
-  letter-spacing: normal;
-  padding: 88px 0px 116px;
-}
+  .secondary-section .g {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px 40px;
+    max-width: 1280px;
+  }
 
-.secondary-section .g .section.follow {
-  padding-top: 0px;
-}
+  .secondary-section .g .section {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 30px;
+    letter-spacing: normal;
+    padding: 88px 0px 116px;
+  }
+
+  .secondary-section .g .section.follow {
+    padding-top: 0px;
+  }
 
 
-.secondary-section .g .section .component-wrapper {
-  display: flex;
-  -moz-box-align: center;
-  align-items: center;
-}
-
-@media screen and (max-width: 1012px) {
   .secondary-section .g .section .component-wrapper {
-    display: block;
+    display: flex;
+    -moz-box-align: center;
+    align-items: center;
   }
-}
 
-.secondary-section .g .section .component-wrapper h3 {
-  color: rgb(38, 38, 38);
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 46px;
-  letter-spacing: normal;
-  margin-bottom: 12px;
-}
+  @media screen and (max-width: 1012px) {
+    .secondary-section .g .section .component-wrapper {
+      display: block;
+    }
+  }
 
-.secondary-section .g .section .component-wrapper h4 {
-  color: rgb(38, 38, 38);
-}
+  .secondary-section .g .section .component-wrapper h3 {
+    color: rgb(38, 38, 38);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 46px;
+    letter-spacing: normal;
+    margin-bottom: 12px;
+  }
 
-.secondary-section .g .section .component-wrapper p {
-  color: rgb(92, 92, 92);
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 30px;
-  letter-spacing: normal;
-  margin-bottom: 16px;
-}
+  .secondary-section .g .section .component-wrapper h4 {
+    color: rgb(38, 38, 38);
+  }
 
-.secondary-section .g .section .component-wrapper .image-wrapper {
-  margin-bottom: 12px;
-  overflow: hidden;
-  border-radius: 8px;
-  margin-top: 48px;
-  border: 1px solid rgb(222, 222, 222);
-  box-shadow: rgba(202, 202, 202, 0.15) 0px 0px 0px 6px;
-  max-width: 600px;
-  width: 100%;
-  height: auto;
-  margin: 0 auto;
-  display: flex;
-  align-items: stretch;
-}
+  .secondary-section .g .section .component-wrapper p {
+    color: rgb(92, 92, 92);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 30px;
+    letter-spacing: normal;
+    margin-bottom: 16px;
+  }
 
-.image-wrapper img {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-}
+  .secondary-section .g .section .component-wrapper .image-wrapper {
+    margin-bottom: 12px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 48px;
+    border: 1px solid rgb(222, 222, 222);
+    box-shadow: rgba(202, 202, 202, 0.15) 0px 0px 0px 6px;
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+  }
 
-.secondary-section .g .section .component-wrapper .first-column {
-  padding-right: 100px;
-  flex: 0 1 auto;
-  height: auto;
-  width: 50%;
-}
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+  }
 
-@media screen and (max-width: 1012px) {
   .secondary-section .g .section .component-wrapper .first-column {
-    padding-right: 0px;
-    width: 100%;
-    margin-bottom: 32px;
+    padding-right: 100px;
+    flex: 0 1 auto;
+    height: auto;
+    width: 50%;
   }
-}
 
-.secondary-section .g .section .component-wrapper .second-column {
-  flex: 0 1 auto;
-  height: auto;
-  width: 50%;
-}
-@media screen and (max-width: 1012px) {
+  @media screen and (max-width: 1012px) {
+    .secondary-section .g .section .component-wrapper .first-column {
+      padding-right: 0px;
+      width: 100%;
+      margin-bottom: 32px;
+    }
+  }
+
   .secondary-section .g .section .component-wrapper .second-column {
-    width: 100%;
-    margin-bottom: 32px;
+    flex: 0 1 auto;
+    height: auto;
+    width: 50%;
   }
-}
 
-.secondary-section .g .section .component-wrapper .responsive-grid {
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
-}
-@media screen and (min-width: 64rem) {
+  @media screen and (max-width: 1012px) {
+    .secondary-section .g .section .component-wrapper .second-column {
+      width: 100%;
+      margin-bottom: 32px;
+    }
+  }
+
   .secondary-section .g .section .component-wrapper .responsive-grid {
-    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
   }
-}
 
-.secondary-section .g .section .component-wrapper .responsive-grid a.card-wrapper {
-  text-decoration: none;
-  transition: none;
-  background: none;
-  padding: 0;
-}
+  @media screen and (min-width: 64rem) {
+    .secondary-section .g .section .component-wrapper .responsive-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
 
-.secondary-section .g .section .component-wrapper .responsive-grid .card {
-  position: relative;
-  background-color:  #fff none repeat scroll 0% 0%;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: row;
-  -moz-box-align: center;
-  align-items: center;
-  height: 100%;
-  -moz-box-pack: start;
-  justify-content: flex-start;
-  box-shadow: rgba(0, 0, 0, 0.09) 0.3125rem 0.3125rem 0px -0.0625rem, rgba(0, 0, 0, 0.15) 0px 0.25rem 0.5rem 0px;
-  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) 0s;
-}
-.secondary-section .g .section .component-wrapper .responsive-grid .card:hover {
-  box-shadow: rgba(0, 0, 0, 0.2) 0.3125rem 0.3125rem 0px -0.0625rem, rgba(0, 0, 0, 0.26) 0px 0.25rem 0.5rem 0px;
-}
+  .secondary-section .g .section .component-wrapper .responsive-grid a.card-wrapper {
+    text-decoration: none;
+    transition: none;
+    background: none;
+    padding: 0;
+  }
 
-@media screen and (min-width: 75rem) {
   .secondary-section .g .section .component-wrapper .responsive-grid .card {
-    padding: 2rem 2.5rem;
+    position: relative;
+    background-color: #fff none repeat scroll 0% 0%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    -moz-box-align: center;
+    align-items: center;
+    height: 100%;
+    -moz-box-pack: start;
+    justify-content: flex-start;
+    box-shadow: rgba(0, 0, 0, 0.09) 0.3125rem 0.3125rem 0px -0.0625rem, rgba(0, 0, 0, 0.15) 0px 0.25rem 0.5rem 0px;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) 0s;
   }
-}
-@media screen and (min-width: 36rem) {
-  .secondary-section .g .section .component-wrapper .responsive-grid .card {
-    padding: 1rem 1.5rem;
+
+  .secondary-section .g .section .component-wrapper .responsive-grid .card:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0.3125rem 0.3125rem 0px -0.0625rem, rgba(0, 0, 0, 0.26) 0px 0.25rem 0.5rem 0px;
   }
-}
 
-.secondary-section .g .section .component-wrapper .responsive-grid .card .logo {
-  margin-right: 0.75rem;
-  width: 1.2rem;
-  min-width: 1.2rem;
-}
+  @media screen and (min-width: 75rem) {
+    .secondary-section .g .section .component-wrapper .responsive-grid .card {
+      padding: 2rem 2.5rem;
+    }
+  }
 
-.secondary-section .g .section .component-wrapper .responsive-grid .card .card-content {
-  display: flex;
-  flex: 1 1 0%;
-  flex-direction: column;
-  width: 100%;
-}
+  @media screen and (min-width: 36rem) {
+    .secondary-section .g .section .component-wrapper .responsive-grid .card {
+      padding: 1rem 1.5rem;
+    }
+  }
 
-.secondary-section .g .section .component-wrapper .responsive-grid .card .card-content h5 {
-  color: rgb(61, 61, 61);
-  margin: 0;
-}
+  .secondary-section .g .section .component-wrapper .responsive-grid .card .logo {
+    margin-right: 0.75rem;
+    width: 1.2rem;
+    min-width: 1.2rem;
+  }
 
-.secondary-section .g .section .component-wrapper .responsive-grid .card .card-content p {
-  margin-top: 0.25em;
-  margin-bottom: 0;
-  color: rgb(92, 92, 92);
-  font-size: 0.65rem;
-  font-weight: 300;
-  line-height: normal;
-}
+  .secondary-section .g .section .component-wrapper .responsive-grid .card .card-content {
+    display: flex;
+    flex: 1 1 0%;
+    flex-direction: column;
+    width: 100%;
+  }
 
-.secondary-section .g .section .component-wrapper .responsive-grid .card .card-content code {
-  background: rgba(0, 0, 0, 0.05) none repeat scroll 0% 0%;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
+  .secondary-section .g .section .component-wrapper .responsive-grid .card .card-content h5 {
+    color: rgb(61, 61, 61);
+    margin: 0;
+  }
+
+  .secondary-section .g .section .component-wrapper .responsive-grid .card .card-content p {
+    margin-top: 0.25em;
+    margin-bottom: 0;
+    color: rgb(92, 92, 92);
+    font-size: 0.65rem;
+    font-weight: 300;
+    line-height: normal;
+  }
+
+  .secondary-section .g .section .component-wrapper .responsive-grid .card .card-content code {
+    background: rgba(0, 0, 0, 0.05) none repeat scroll 0% 0%;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
 
 
-.component-wrapper span.em {
-  color: rgb(61, 61, 61);
-}
+  .component-wrapper span.em {
+    color: rgb(61, 61, 61);
+  }
 
-.component-wrapper a {
-  transition: color 125ms;
-  color: rgb(61, 61, 61);
-  background: rgba(0, 0, 0, 0.05) none repeat scroll 0% 0%;
-  padding: 2px 6px;
-  margin: 0px 1px;
-  border-radius: 4px;
-  display: inline;
-  cursor: pointer;
-  font-weight: 600;
-}
+  .component-wrapper a {
+    transition: color 125ms;
+    color: rgb(61, 61, 61);
+    background: rgba(0, 0, 0, 0.05) none repeat scroll 0% 0%;
+    padding: 2px 6px;
+    margin: 0px 1px;
+    border-radius: 4px;
+    display: inline;
+    cursor: pointer;
+    font-weight: 600;
+  }
 
-.component-wrapper a:hover {
-  color: var(--md-typeset-a-color);
-  background: var(--md-accent-fg-color--transparent);
-}
+  .component-wrapper a:hover {
+    color: var(--md-typeset-a-color);
+    background: var(--md-accent-fg-color--transparent);
+  }
 
+  .pricing-plan-list {
+    display: flex;
+  }
+
+  .pricing-plan {
+    position: relative;
+    width: 20em;
+    padding: 40px 0;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0px 1px 2px 0px rgba(67, 74, 84, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .pricing-plan:first-child .pricing-plan__price {
+    color: #65c163;
+  }
+
+  .pricing-plan:first-child:before {
+    background-image: linear-gradient(90deg, #bede2f 0%, #30c85f 100%);
+  }
+
+  .pricing-plan:nth-child(2) .pricing-plan__price {
+    color: #31a3d2;
+  }
+
+  .pricing-plan:nth-child(2):before {
+    background-image: linear-gradient(90deg, #29c4cf 0%, #3a7bd5 100%);
+  }
+
+  .pricing-plan:last-child .pricing-plan__price {
+    color: #794eb1;
+  }
+
+  .pricing-plan:last-child:before {
+    background-image: linear-gradient(90deg, #3e6dcc 0%, #9014e8 100%);
+  }
+
+  .pricing-plan:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+  }
+
+  .pricing-plan--featured {
+    z-index: 1;
+    width: 30em;
+  }
+
+  .pricing-plan--featured .pricing-plan__name {
+    margin-top: 30px;
+  }
+
+  .pricing-plan__name,
+  .pricing-plan__price {
+    font-weight: 200;
+  }
+
+  .pricing-plan__name {
+    font-size: 32px;
+    margin: 0 0 25px 0;
+  }
+
+  .pricing-plan__price {
+    font-size: 60px;
+    margin: 0 0 5px 0;
+  }
+
+  .pricing-plan__disclosure {
+    font-size: 12px;
+    color: #a1a5aa;
+  }
+
+  .pricing-plan__feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    margin-top: 25px;
+    line-height: 2.5;
+    color: #656d78;
+  }
+
+  li {list-style-type: none;}
 </style>
 
-  <!-- Hero for landing page -->
-  <br><br><br>
-  <div class="md-container tx-hero">
-    <div class="md-grid md-typeset">
-      <div class="md-main__inner">
-        <div>
-          <h1>Inference with Collected Onnx Weights project</h1>
-          <p>Easily deploy models to dev, test, and production
-          </p>
-          <a
-            href="overview/"
-            title="Get Started"
-            class="md-button md-button--primary"
-          >
-            Get started
-            <svg width="11" height="10" viewBox="0 0 11 10" fill="none" style="margin-left:2px"><path d="M1 5.16772H9.5M9.5 5.16772L6.5 1.66772M9.5 5.16772L6.5 8.66772" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-          </a>
+<!-- Hero for landing page -->
+<br><br><br>
+<div class="md-container tx-hero">
+  <div class="md-grid md-typeset">
+    <div class="md-main__inner">
+      <div>
+        <h1>Inference with Collected Onnx Weights project</h1>
+        <p>Easily deploy models to dev, test, and production
+        </p>
+        <a href="overview/" title="Get Started" class="md-button md-button--primary">
+          Get started
+          <svg width="11" height="10" viewBox="0 0 11 10" fill="none" style="margin-left:2px">
+            <path d="M1 5.16772H9.5M9.5 5.16772L6.5 1.66772M9.5 5.16772L6.5 8.66772" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="md-container tx-hero">
+  <div class="md-grid md-typeset">
+    <div class="md-main__inner">
+      <div class="pricing-plan-list">
+        <div class="pricing-plan">
+          <h2 class="pricing-plan__name">lIteCOW</h2>
+          <h1 class="pricing-plan__price">Free</h1>
+          <ul class="pricing-plan__feature-list">
+            <li class="pricing-plan__feature">Standard fetaures</li>
+          </ul>
+        </div>
+        <div class="pricing-plan">
+          <h2 class="pricing-plan__name">ICOW</h2>
+          <h1 class="pricing-plan__price">$TBD</h1>
+          <small class="pricing-plan__disclosure">charged on a monthly basis</small>
+          <ul class="pricing-plan__feature-list">
+            <li class="pricing-plan__feature">Streaming Support</li>
+            <li class="pricing-plan__feature">Generic Tensor Support</li>
+            <li class="pricing-plan__feature">VINNIE Integration</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 
 {% endblock %}
@@ -332,5 +452,5 @@
 
 <!-- Application footer -->
 {% block footer %}
-  {{ super() }}
+{{ super() }}
 {% endblock %}
