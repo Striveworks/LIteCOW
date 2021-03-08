@@ -7,9 +7,11 @@ docs_dir: 'docs/content'
 extra_css:
   - extra.css
 
+
 nav:
   - Home: index.md
   - Overview: overview.md
+  - Getting Started: setup.md
 
 theme:
   name: material
