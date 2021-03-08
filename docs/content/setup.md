@@ -4,7 +4,7 @@ To install ICOW you need to have a k8s or similar cluster setup to deploy knativ
 
 1. Create a cluster config based on [Step 1 of the knative tutorial](https://knative.dev/blog/1/01/01/how-to-set-up-a-local-knative-environment-with-kind-and-without-dns-headaches/#step-1-setting-up-your-kubernetes-deployment-using-kind) with the filename of `clusterconfig.yaml`. The only change should be from `kind.sigs.k8s.io/v1alpha3` to `4` as seen below.
 
-    ```
+    ```yaml
     kind: Cluster
     apiVersion: kind.sigs.k8s.io/v1alpha4
     nodes:
@@ -32,19 +32,22 @@ To install ICOW you need to have a k8s or similar cluster setup to deploy knativ
 
 3. Apply the knative service components.
 
-    ```
-    kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-crds.yaml
-  
+    ```bash
     kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-core.yaml
     ```
 
 4. Follow step 3 of the [knative kind tutorial](https://knative.dev/blog/1/01/01/how-to-set-up-a-local-knative-environment-with-kind-and-without-dns-headaches/#step-3-set-up-networking-using-kourier) for downloading, adjusting, and installing Kourier.
 
-    ```
+    ```bash
     curl -Lo kourier.yaml https://github.com/knative-sandbox/net-kourier/releases/download/v0.21.0/kourier.yaml
     ```
 
     You may have to follow https://knative.dev/docs/install/any-kubernetes-cluster/ if you have a regular k8s deployment rather than kind.
+
+    After kourier.yaml has been adjusted to your cluster's needs apply it like:
+    ```bash
+    kubectl apply -f kourier.yaml
+    ```
 
 5. At this point the cluster and knative is configured. Now we have to deploy icow. If you are using a kind cluster we will need to build the icow service image and push it into the cluster, or use an icow image in a repo.
 
