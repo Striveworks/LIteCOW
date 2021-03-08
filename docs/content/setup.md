@@ -30,10 +30,12 @@ To install ICOW you need to have a k8s or similar cluster setup to deploy knativ
     kubectl apply -f clusterconfig.yaml
     ```
 
-3. Apply the knative service component.
+3. Apply the knative service components.
 
     ```
     kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-crds.yaml
+  
+    kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-core.yaml
     ```
 
 4. Follow step 3 of the [knative kind tutorial](https://knative.dev/blog/1/01/01/how-to-set-up-a-local-knative-environment-with-kind-and-without-dns-headaches/#step-3-set-up-networking-using-kourier) for downloading, adjusting, and installing Kourier.
