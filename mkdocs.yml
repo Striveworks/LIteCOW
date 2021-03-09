@@ -12,7 +12,7 @@ nav:
   - Home: index.md
   - Overview: overview.md
   - Getting Started:
-    - Sandbox: setup.md
+    - Sandbox: sandbox.md
     - Installation: install.md
     - ICOW Python Client: pycow.md
 
