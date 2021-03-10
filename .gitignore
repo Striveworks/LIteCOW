@@ -1,2 +1,4 @@
 *.egg*
 *.lock*
+__pycache__/
+.pytest_cache/
