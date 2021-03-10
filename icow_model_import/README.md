@@ -1,7 +1,9 @@
 # ICOW Model Import
 
 
-## How to use to serialize a Pytorch model for use with ICOW
+## How to serialize a Pytorch model for use with ICOW
+
+This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with versioning enabled. For developmental purposes you can copy/change our docker-compose configuration to allow for quick local deployment.
 
 1. Install `icow_model_import`
 
@@ -20,7 +22,7 @@
 
     import torch
 
-    from icow_model_import import onnx_file_to_s3, pytorch_to_bucket
+    from icow_model_import import onnx_file_to_s3, pytorch_to_onnx_file
 
 
     class SimpleMLP(torch.nn.Module):
@@ -92,6 +94,41 @@
     ```
 
 
+## Using ICOW Model Import's CLI to Upload Serialized ONNX Models
+
+This guide assumes you already have serialized ONNX models that you would like to use with ICOW.
+
+1. Install `icow_model_import`.
+
+2. Run the cli for importing onnx models. See its usage below.
+
+    ```
+    usage: import-onnx-model [-h]
+                         onnx_model_path model_bucket model_object_name
+                         model_version
+
+    Import a model from an existing onnx file into icow.
+
+    positional arguments:
+    onnx_model_path    Path to the serialized onnx model file.
+    model_bucket       S3 bucket name for uploading the model to.
+    model_object_name  Name for the uploaded s3 model object.
+    model_version      Version tag added to the uploaded s3 model object.
+    ```
+
+    Running this from the command line should look like the following.
+
+    ```bash
+    import-onnx-model tests/data/simple_onnx_model.onnx models simple_model my-version
+    ```
+
+    If using poetry it would instead look like the following command.
+
+    ```bash
+    poetry run import-onnx-model tests/data/simple_onnx_model.onnx models simple_model my-version
+    ``` 
+
+
 ## Testing with Docker Compose
 
 1. Start the docker-compose stack. This will create the nescessary containers and kick off appropriate processes for testing.
@@ -108,10 +145,24 @@
 
 ## Development environment with Docker-Compose
 
-For dev purposes, feel free to edit the startup.sh script and add `tail -f /dev/null` to the end of it so that the docker stays alive and exec into the container like so.
+For dev purposes, feel free to edit the docker-compose file from 
 
-    ```bash
+
+    icow_model_import:
+        ...
+        command: make test
+        ...
+    
+to the following changing the make recipe used in the startup command.
+
+
+    icow_model_import:
+        ...
+        command: make stay-alive
+        ...
+
+so that the docker stays alive and it's possible to exec into the container like so.
+
     docker exec -it icow_model_import_icow_model_import_1 bash
-    ```
 
-Thanks to docker volume mounts, all changes outside and inside of the docker will persist and allow editing and development.
+Once inside run any python related commands with poetry. E.g. `poetry run python my_script.py` or `poetry run pytest`. Thanks to docker volume mounts, all changes outside and inside of the docker will persist and allow editing and development.

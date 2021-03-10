@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    command: bash scripts/startup.sh
+    command: make stay-alive
     volumes: 
       - ./:/icow_model_import
     environment: 
