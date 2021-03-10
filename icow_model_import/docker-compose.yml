@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    command: tail -f /dev/null
+    command: bash scripts/startup.sh
     volumes: 
       - ./:/icow_model_import
     environment: 
