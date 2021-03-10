@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    command: make stay-alive
+    command: make test
     volumes: 
       - ./:/icow_model_import
     environment: 

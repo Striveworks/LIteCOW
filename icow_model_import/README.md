@@ -1,6 +1,29 @@
 # ICOW Model Import
 
 
+## Preparing an S3 Instance
+
+ICOW requires an S3 Instance with versioning enabled. We have a cli command that comes installed with the `icow_model_import` package .For development purposes the `icow_model_import/docker-compose.yml` shows how a minio docker can be configured for versioning.
+
+To use the CLI please see the below steps.
+
+1. Install `icow_model_import`.
+
+2. Set S3 configuration parameters in the environment including the following.
+
+    ```
+    AWS_ACCESS_KEY=<Access key for your s3>
+    AWS_SECRET_KEY=<Secret key for your s3>
+    S3ENDPOINT_URL=<Endpoint for your s3 instance>
+    ``` 
+
+2. Use the `init-s3` cli command to initialize a new bucket in the configured S3 instance, passing in the name for an existing bucket that will have versioning enabled, or for a new bucket to be created.
+
+    ```bash
+    init-s3 <bucket name>
+    ```
+
+
 ## How to serialize a Pytorch model for use with ICOW
 
 This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with versioning enabled. For developmental purposes you can copy/change our docker-compose configuration to allow for quick local deployment.
