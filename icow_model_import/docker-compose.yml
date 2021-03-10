@@ -1,0 +1,31 @@
+version: '3'
+services:
+  minio:
+    image: minio/minio:latest
+    # These volumes are neseccary for minio to enable Erasure Code and therefore object
+    # versioning https://docs.min.io/docs/minio-erasure-code-quickstart-guide.html
+    volumes: 
+      - /tmp/data1:/data1
+      - /tmp/data2:/data2
+      - /tmp/data3:/data3
+      - /tmp/data4:/data4
+    command: server /data{1...4}
+    ports: 
+      - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: test
+      MINIO_SECRET_KEY: testtest
+
+  icow_model_import:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: tail -f /dev/null
+    volumes: 
+      - ./:/icow_model_import
+    environment: 
+      - AWS_ACCESS_KEY=test
+      - AWS_SECRET_KEY=testtest
+      - S3ENDPOINT_URL=http://minio:9000
+    depends_on:
+      - minio

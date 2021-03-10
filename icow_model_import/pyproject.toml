@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "icow_model_import"
+version = "0.1.0"
+description = ""
+authors = ["Julian Medina <jmedina@striveworks.us>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+boto3 = "^1.17.23"
+boto3-stubs = "^1.17.23.0"
+mypy-boto3-s3 = "^1.17.23.0"
+torch = "^1.8.0"
+onnxruntime = "^1.7.0"
+
+[tool.poetry.dev-dependencies]
+minio = "^7.0.2"
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
