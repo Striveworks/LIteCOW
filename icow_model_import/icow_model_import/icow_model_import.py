@@ -8,6 +8,8 @@ from typing import Dict, List, Optional, Union
 import boto3
 import torch
 
+from mypy_boto3_s3 import S3Client
+
 
 def serialize_model_to_file(
     net: torch.nn.Module,
@@ -45,7 +47,7 @@ def serialize_model_to_file(
 
 
 def verify_model_version(
-    model_bucket: str, model_name: str, model_version: int,
+    model_bucket: str, model_name: str, model_version: str, s3_client: S3Client
 ) -> None:
     """Verify that the given model and version do not conflict with pre-existing S3
     objects.
@@ -56,8 +58,10 @@ def verify_model_version(
         Bucket that models are uploaded to.
     model_name : str
         Name of the model and bucket object.
-    model_version : int
+    model_version : str
         New version for a model.
+    s3_client : S3Client
+        S3 client for connecting to s3.
 
     Raises
     ------
@@ -71,13 +75,16 @@ def verify_model_version(
         endpoint_url=environ["S3ENDPOINT_URL"],
     ).Bucket(model_bucket)
     for version in bucket.object_versions.filter(Prefix=model_name):
-        bucket_object = version.get()
-        if int(bucket_object["Metadata"]["model-version"]) == model_version:
-            logging.error("Given already existing model version for serializing")
-            raise ValueError(
-                f"Given model version '{model_version}', already exists, please try "
-                "again with a new version"
-            )
+        tags = s3_client.get_object_tagging(
+            Bucket=model_bucket, Key=model_name, VersionId=version.id
+        )["TagSet"]
+        for tag in tags:
+            if tag["Key"] == "model-version" and tag["Value"] == str(model_version):
+                logging.error("Given already existing model version for serializing")
+                raise ValueError(
+                    f"Given model version '{model_version}', already exists, please "
+                    "try again with a new version"
+                )
 
 
 def pytorch_to_onnx_file(
@@ -157,17 +164,24 @@ def onnx_file_to_s3(
     """
 
     # Validate the given model & model version in S3 and send to the model bucket
-    verify_model_version(model_bucket, model_object_name, model_version)
     s3_client = boto3.client(
         "s3",
         aws_access_key_id=environ["AWS_ACCESS_KEY"],
         aws_secret_access_key=environ["AWS_SECRET_KEY"],
         endpoint_url=environ["S3ENDPOINT_URL"],
     )
+    verify_model_version(model_bucket, model_object_name, model_version, s3_client)
     s3_client.upload_file(
-        onnx_model,
+        onnx_model, model_bucket, model_object_name,
+    )
+    s3_client.put_object_tagging(
+        Bucket=model_bucket,
+        Key=model_object_name,
+        Tagging={"TagSet": [{"Key": "model-version", "Value": str(model_version)}]},
+    )
+    logging.info(
+        "Model is available at s3://%s/%s with tag {'model-version': '%s'}",
         model_bucket,
         model_object_name,
-        ExtraArgs={"Metadata": {"model-version": str(model_version)}},
+        model_version,
     )
-    logging.info("Model is available at s3://%s/%s", model_bucket, model_object_name)

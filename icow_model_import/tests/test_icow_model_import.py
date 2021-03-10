@@ -213,11 +213,16 @@ def test_to_file_pos() -> None:
 # verify_model_version
 
 
-def test_no_existing_objects_pos() -> None:
+def test_no_existing_objects_pos(boto_client: S3Client) -> None:
     """Test that verify_model_version won't raise any error if there are no objects by
     the name of the given model.
+
+    Parameters
+    ----------
+    boto_client : S3Client
+        Client to use for uploading new objects.
     """
-    verify_model_version(TEST_BUCKET_NAME, "test_model", 0)
+    verify_model_version(TEST_BUCKET_NAME, "test_model", 0, boto_client)
 
 
 def test_no_conflict_pos(boto_client: S3Client) -> None:
@@ -233,12 +238,15 @@ def test_no_conflict_pos(boto_client: S3Client) -> None:
     with NamedTemporaryFile() as tempfile:
         tempfile.write(b"test data")
         boto_client.upload_fileobj(
-            tempfile,
-            TEST_BUCKET_NAME,
-            model_name,
-            ExtraArgs={"Metadata": {"model-version": "1"}},
+            tempfile, TEST_BUCKET_NAME, model_name,
         )
-    verify_model_version(TEST_BUCKET_NAME, model_name, 2)
+        version = 1
+        boto_client.put_object_tagging(
+            Bucket=TEST_BUCKET_NAME,
+            Key=model_name,
+            Tagging={"TagSet": [{"Key": "model-version", "Value": str(version)}]},
+        )
+    verify_model_version(TEST_BUCKET_NAME, model_name, 2, boto_client)
 
 
 def test_conflicting_versions_neg(boto_client: S3Client) -> None:
@@ -254,25 +262,32 @@ def test_conflicting_versions_neg(boto_client: S3Client) -> None:
     with NamedTemporaryFile() as tempfile:
         tempfile.write(b"test data")
         boto_client.upload_fileobj(
-            tempfile,
-            TEST_BUCKET_NAME,
-            model_name,
-            ExtraArgs={"Metadata": {"model-version": "1"}},
+            tempfile, TEST_BUCKET_NAME, model_name,
+        )
+        version = 2
+        boto_client.put_object_tagging(
+            Bucket=TEST_BUCKET_NAME,
+            Key=model_name,
+            Tagging={"TagSet": [{"Key": "model-version", "Value": str(version)}]},
         )
     with pytest.raises(ValueError) as err:
-        verify_model_version(TEST_BUCKET_NAME, model_name, 1)
+        verify_model_version(TEST_BUCKET_NAME, model_name, version, boto_client)
     assert "already exists" in str(err.value)
 
 
 # onnx_file_to_s3
 
 
-def test_single_model_upload_pos(boto_bucket: Tuple[Bucket, str]) -> None:
+def test_single_model_upload_pos(
+    boto_client: S3Client, boto_bucket: Tuple[Bucket, str]
+) -> None:
     """Test that onnx_file_to_s3 will correctly create a single model object with
     versioning metadata.
 
     Parameters
     ----------
+    boto_client : S3Client
+        Client to use for uploading new objects.
     boto_bucket : Tuple[Bucket, str]
         boto3 S3 bucket and the bucket name.
     """
@@ -287,18 +302,26 @@ def test_single_model_upload_pos(boto_bucket: Tuple[Bucket, str]) -> None:
     assert len(models) == 1
 
     # Check version metadata added correctly
-    versions = boto_bucket.object_versions.filter(Prefix=model_name)
-    assert len(list(versions)) == 1
-    obj = list(versions)[0].get()
-    assert obj["Metadata"]["model-version"] == version
+    versions = list(boto_bucket.object_versions.filter(Prefix=model_name))
+    assert len(versions) == 1
+    tags = boto_client.get_object_tagging(
+        Bucket=model_bucket, Key=model_name, VersionId=versions[0].id
+    )["TagSet"]
+    for tag in tags:
+        if tag["Key"] == "model-version":
+            assert tag["Value"] == str(version)
 
 
-def test_multiple_model_versions_pos(boto_bucket: Tuple[Bucket, str]) -> None:
+def test_multiple_model_versions_pos(
+    boto_client: S3Client, boto_bucket: Tuple[Bucket, str]
+) -> None:
     """Test that onnx_file_to_s3 will correctly create multiple model objects of the
     same model with versioning metadata.
 
     Parameters
     ----------
+    boto_client : S3Client
+        Client to use for uploading new objects.
     boto_bucket : Tuple[Bucket, str]
         boto3 S3 bucket and the bucket name.
     """
@@ -316,5 +339,9 @@ def test_multiple_model_versions_pos(boto_bucket: Tuple[Bucket, str]) -> None:
     versions = boto_bucket.object_versions.filter(Prefix=model_name)
     assert len(list(versions)) == 2
     for version, version_int in zip(versions, [1, 0]):
-        obj = version.get()
-        assert obj["Metadata"]["model-version"] == str(version_int)
+        tags = boto_client.get_object_tagging(
+            Bucket=model_bucket, Key=model_name, VersionId=version.id
+        )["TagSet"]
+        for tag in tags:
+            if tag["Key"] == "model-version":
+                assert tag["Value"] == str(version_int)
