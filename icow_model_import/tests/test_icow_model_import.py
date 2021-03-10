@@ -1,6 +1,7 @@
 from os import environ
+from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Iterator, Tuple
+from typing import Iterator, Tuple, Union
 
 import boto3
 import onnxruntime
@@ -11,7 +12,8 @@ from mypy_boto3_s3 import S3Client
 from mypy_boto3_s3.service_resource import Bucket
 
 from icow_model_import import (
-    pytorch_to_bucket,
+    onnx_file_to_s3,
+    pytorch_to_onnx_file,
     serialize_model_to_file,
     verify_model_version,
 )
@@ -82,8 +84,8 @@ def test_serialize_to_temp_file_pos() -> None:
     )
     with NamedTemporaryFile() as tempfile:
         serialize_model_to_file(
-            tempfile.name,
             model,
+            tempfile.name,
             dummy_forward_input,
             ["output"],
             {"input": {0: "batch_size"}},
@@ -132,51 +134,7 @@ def boto_bucket() -> Iterator[Tuple[Bucket, str]]:
     yield s3.Bucket(TEST_BUCKET_NAME), TEST_BUCKET_NAME
 
 
-def test_to_bucket_and_back_pos(
-    boto_client: S3Client, boto_bucket: Tuple[Bucket, str]
-) -> None:
-    """Test that models serialized from a tempfile can go the reverse direction during
-    deserialization.
-
-    Parameters
-    ----------
-    boto_client : S3Client
-        Client to use for downloading objects.
-    boto_bucket : Tuple[Bucket, str]
-        boto3 S3 bucket and the bucket name.
-    """
-    boto_bucket, model_bucket = boto_bucket
-
-    # Serialize and check one object is in the bucket afterwards
-    model = SimpleMLP()
-    dummy_forward_input = torch.randn(1, 1, 256).to(
-        "cuda" if torch.cuda.is_available() else "cpu"
-    )
-    model_name = "test_model"
-    pytorch_to_bucket(
-        model,
-        1,
-        256,
-        model_bucket,
-        model_name,
-        1,
-        dynamic_shape=False,
-        dummy_forward_input=dummy_forward_input,
-    )
-    models = list(boto_bucket.objects.all())
-    assert len(models) == 1
-
-    # Test that the serialized model can be downloaded into a tempfile and directly to
-    # onnx
-    with NamedTemporaryFile("wb") as tempfile:
-        boto_client.download_fileobj(TEST_BUCKET_NAME, model_name, tempfile)
-        onnx_options = onnxruntime.SessionOptions()
-        onnxruntime.InferenceSession(
-            str(tempfile.name), sess_options=onnx_options,
-        )
-
-
-# pytorch_to_bucket
+# pytorch_to_onnx_file
 
 
 def delete_all_object_versions(bucket: Bucket, s3_client: S3Client) -> None:
@@ -219,72 +177,37 @@ def clean_models() -> None:
     delete_all_object_versions(bucket, s3_client)
 
 
-def test_to_bucket_pos(boto_bucket: Tuple[Bucket, str]) -> None:
-    """Test that pytorch_to_bucket will correctly serialize a model to an s3 bucket.
+def deserialize_model_from_file(file_path: Union[str, Path]) -> None:
+    """Deserializes an onnx model from a file.
 
     Parameters
     ----------
-    boto_bucket : Tuple[Bucket, str]
-        boto3 S3 bucket and the bucket name.
+    file_path : Union[str, Path]
+        Path to the onnx model to deserialize.
     """
-    boto_bucket, model_bucket = boto_bucket
+    onnx_options = onnxruntime.SessionOptions()
+    onnxruntime.InferenceSession(
+        file_path, sess_options=onnx_options,
+    )
 
-    # Serialize and check one object is in the bucket afterwards
+
+def test_to_file_pos() -> None:
+    """Test that pytorch_to_bucket will correctly serialize a model to file."""
+    # Serialize and check the model can be deserialized after
     model = SimpleMLP()
     dummy_forward_input = torch.randn(1, 1, 256).to(
         "cuda" if torch.cuda.is_available() else "cpu"
     )
-    model_name = "test_model"
-    pytorch_to_bucket(
-        model,
-        1,
-        256,
-        model_bucket,
-        model_name,
-        1,
-        dynamic_shape=False,
-        dummy_forward_input=dummy_forward_input,
-    )
-    models = list(boto_bucket.objects.all())
-    assert len(models) == 1
-
-
-def test_multiple_model_versions(boto_bucket: Tuple[Bucket, str],) -> None:
-    """Test that pytorch_to_bucket will correctly create multiple model objects of the
-    same model with versioning metadata.
-
-    Parameters
-    ----------
-    boto_bucket : Tuple[Bucket, str]
-        boto3 S3 bucket and the bucket name.
-    """
-    # Serialize the same model twice
-    model = SimpleMLP()
-    dummy_forward_input = torch.randn(1, 1, 256).to(
-        "cuda" if torch.cuda.is_available() else "cpu"
-    )
-    boto_bucket, model_bucket = boto_bucket
-    model_name = "test_model"
-    for version_num in range(2):
-        pytorch_to_bucket(
+    with NamedTemporaryFile() as tempfile:
+        pytorch_to_onnx_file(
             model,
+            tempfile.name,
             1,
             256,
-            model_bucket,
-            model_name,
-            version_num,
             dynamic_shape=False,
             dummy_forward_input=dummy_forward_input,
         )
-    models = list(boto_bucket.objects.all())
-    assert len(models) == 1
-
-    # Check version metadata added correctly
-    versions = boto_bucket.object_versions.filter(Prefix=model_name)
-    assert len(list(versions)) == 2
-    for version, version_int in zip(versions, [1, 0]):
-        obj = version.get()
-        assert int(obj["Metadata"]["model-version"]) == version_int
+        deserialize_model_from_file(tempfile.name)
 
 
 # verify_model_version
@@ -339,3 +262,59 @@ def test_conflicting_versions_neg(boto_client: S3Client) -> None:
     with pytest.raises(ValueError) as err:
         verify_model_version(TEST_BUCKET_NAME, model_name, 1)
     assert "already exists" in str(err.value)
+
+
+# onnx_file_to_s3
+
+
+def test_single_model_upload_pos(boto_bucket: Tuple[Bucket, str]) -> None:
+    """Test that onnx_file_to_s3 will correctly create a single model object with
+    versioning metadata.
+
+    Parameters
+    ----------
+    boto_bucket : Tuple[Bucket, str]
+        boto3 S3 bucket and the bucket name.
+    """
+    # Upload the model
+    boto_bucket, model_bucket = boto_bucket
+    model_name = "simple_model"
+    version = "my-version"
+    onnx_file_to_s3(
+        "tests/data/simple_onnx_model.onnx", model_bucket, model_name, version
+    )
+    models = list(boto_bucket.objects.all())
+    assert len(models) == 1
+
+    # Check version metadata added correctly
+    versions = boto_bucket.object_versions.filter(Prefix=model_name)
+    assert len(list(versions)) == 1
+    obj = list(versions)[0].get()
+    assert obj["Metadata"]["model-version"] == version
+
+
+def test_multiple_model_versions_pos(boto_bucket: Tuple[Bucket, str]) -> None:
+    """Test that onnx_file_to_s3 will correctly create multiple model objects of the
+    same model with versioning metadata.
+
+    Parameters
+    ----------
+    boto_bucket : Tuple[Bucket, str]
+        boto3 S3 bucket and the bucket name.
+    """
+    # Upload the same model twice
+    boto_bucket, model_bucket = boto_bucket
+    model_name = "simple_model"
+    for version in range(2):
+        onnx_file_to_s3(
+            "tests/data/simple_onnx_model.onnx", model_bucket, model_name, version
+        )
+    models = list(boto_bucket.objects.all())
+    assert len(models) == 1
+
+    # Check version metadata added correctly
+    versions = boto_bucket.object_versions.filter(Prefix=model_name)
+    assert len(list(versions)) == 2
+    for version, version_int in zip(versions, [1, 0]):
+        obj = version.get()
+        assert obj["Metadata"]["model-version"] == str(version_int)

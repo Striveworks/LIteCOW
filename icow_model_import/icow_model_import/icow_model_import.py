@@ -10,20 +10,21 @@ import torch
 
 
 def serialize_model_to_file(
-    out_path: Union[str, Path],
     net: torch.nn.Module,
+    out_path: Union[str, Path],
     dummy_forward_input: torch.Tensor,
     output_names: List[str],
     dynamic_axes: Dict[str, Dict[int, str]],
 ) -> None:
-    """Serializes a given pytorch model to a file path.
+    """Serializes a given pytorch model to a file path. Main use for this is verifying
+    tempfile IOs work with serialization and deserialization of onnx models.
 
     Parameters
     ----------
-    out_path : Union[str, Path]
-        Path where the serialized model should be written to.
     net : torch.nn.Module
         Pytorch model to serialize.
+    out_path : Union[str, Path]
+        Path where the serialized model should be written to.
     dummy_forward_input : torch.Tensor
         Forward input for the model to be used for tracing the model and creating the
         onnx execution graph for serialization.
@@ -79,20 +80,17 @@ def verify_model_version(
             )
 
 
-def pytorch_to_bucket(
+def pytorch_to_onnx_file(
     net: torch.nn.Module,
+    out_file: Union[str, Path],
     model_input_height: int,
     model_input_width: int,
-    model_bucket: str,
-    model_object_name: str,
-    model_version: int,
     dynamic_shape: Optional[bool] = True,
     output_names: Optional[List[str]] = None,
     dummy_forward_input: Optional[torch.Tensor] = None,
 ) -> None:
-    """Serialize a pytorch network with some given dummy input and dynamic batch sizes
-    and export the model to an S3 bucket. The serialized model is done through tracing
-    and/or scripting as shown in
+    """Serialize a pytorch network with some given dummy input and dynamic batch sizes.
+    The serialized model is done through tracing and/or scripting as shown in
     https://pytorch.org/docs/stable/onnx.html#tracing-vs-scripting. If the network's
     forward function uses control or loop structures, only some of these can be captured
     with tracing/scripting.
@@ -101,16 +99,12 @@ def pytorch_to_bucket(
     ----------
     net : torch.nn.Module
         Network to serialize.
+    out_file : Union[str, Path]
+        File path to export the onnx file to.
     model_input_height : int
         Model input dimension height.
     model_input_width : int
         Model input dimension width.
-    model_bucket : str
-        S3 bucket to use for storing the serialized models.
-    model_object_name : str
-        Name for the uploaded model object in s3.
-    model_version : int
-        Version for the uploaded model object.
     dynamic_shape : Optional[bool]
         Whether or not the spatial dimensions of the input are dynamic. Defaults to
         False, meaning the shape is static.
@@ -121,11 +115,9 @@ def pytorch_to_bucket(
         Dummy forward pass input that will be run through the model for tracing export
         purposes. Defaults to None meaning a dummy input will be generated.
     """
+    # Set the network to evaluation mode
     output_names = output_names or ["output"]
     net.eval()
-
-    # Validate the given model and model version
-    verify_model_version(model_bucket, model_object_name, model_version)
 
     # Create random tensor used for onnx export and run it through the model
     if dummy_forward_input is None:
@@ -134,26 +126,48 @@ def pytorch_to_bucket(
         ).to("cuda" if torch.cuda.is_available() else "cpu")
     net(dummy_forward_input)
 
-    # Export the model via onnx and send to the model bucket
+    # Serialize model
+    if dynamic_shape:
+        dynamic_axes = {"input": {0: "batch_size", 2: "height", 3: "width"}}
+    else:
+        dynamic_axes = {"input": {0: "batch_size"}}
+    serialize_model_to_file(
+        net, out_file, dummy_forward_input, output_names, dynamic_axes,
+    )
+
+
+def onnx_file_to_s3(
+    onnx_model: Union[str, Path],
+    model_bucket: str,
+    model_object_name: str,
+    model_version: str,
+) -> None:
+    """Uploads a given onnx file to s3.
+
+    Parameters
+    ----------
+    onnx_model : Union[str, Path]
+        Path to the onnx model serialized to a file.
+    model_bucket : str
+        Bucket for the model to be uploaded to.
+    model_object_name : str
+        Name for the model to be used in s3.
+    model_version : str
+        Version tag for the uploaded object in s3.
+    """
+
+    # Validate the given model & model version in S3 and send to the model bucket
+    verify_model_version(model_bucket, model_object_name, model_version)
     s3_client = boto3.client(
         "s3",
         aws_access_key_id=environ["AWS_ACCESS_KEY"],
         aws_secret_access_key=environ["AWS_SECRET_KEY"],
         endpoint_url=environ["S3ENDPOINT_URL"],
     )
-    if dynamic_shape:
-        dynamic_axes = {"input": {0: "batch_size", 2: "height", 3: "width"}}
-    else:
-        dynamic_axes = {"input": {0: "batch_size"}}
-    with NamedTemporaryFile() as tempfile:
-        serialize_model_to_file(
-            tempfile.name, net, dummy_forward_input, output_names, dynamic_axes,
-        )
-        s3_client.upload_fileobj(
-            tempfile,
-            model_bucket,
-            f"{model_object_name}",
-            ExtraArgs={"Metadata": {"model-version": str(model_version)}},
-        )
-    s3_path = f"s3://{model_bucket}/{model_object_name}"
-    logging.info(f"Model is available at {s3_path}")
+    s3_client.upload_file(
+        onnx_model,
+        model_bucket,
+        model_object_name,
+        ExtraArgs={"Metadata": {"model-version": str(model_version)}},
+    )
+    logging.info("Model is available at s3://%s/%s", model_bucket, model_object_name)
