@@ -13,12 +13,14 @@
     S3ENDPOINT_URL=<Endpoint for your s3 instance>
     ```
 
-3. Import `pytorch_to_bucket` from `icow_model_import` wherever your model can be loaded or is defined and call it with the desired parameters. An example of this can be seen below.
+3. Import `pytorch_to_onnx_file` and `onnx_file_to_s3` from `icow_model_import` wherever your model can be loaded or is defined and call it with the desired parameters. An example of this can be seen below.
 
     ```python
+    from tempfile import NamedTemporaryFile
+
     import torch
 
-    from icow_model_import import pytorch_to_bucket
+    from icow_model_import import onnx_file_to_s3, pytorch_to_bucket
 
 
     class SimpleMLP(torch.nn.Module):
@@ -72,45 +74,21 @@
     dummy_forward_input = torch.randn(1, 1, 256).to(
         "cuda" if torch.cuda.is_available() else "cpu"
     )
-    model_name = "simple_model"
-    pytorch_to_bucket(
-        model,
-        1,
-        256,
-        "models",
-        model_name,
-        1,
-        dynamic_shape=False,
-        dummy_forward_input=dummy_forward_input,
-    )
-    ```
-
-    Please see our code docs for a more in-depth look but here is a quick look at the parameter list for `pytorch_to_bucket`.
-
-    ```
-    Parameters
-    ----------
-    net : torch.nn.Module
-        Network to serialize.
-    model_input_height : int
-        Model input dimension height.
-    model_input_width : int
-        Model input dimension width.
-    model_bucket : str
-        S3 bucket to use for storing the serialized models.
-    model_object_name : str
-        Name for the uploaded model object in s3.
-    model_version : int
-        Version for the uploaded model object.
-    dynamic_shape : Optional[bool]
-        Whether or not the spatial dimensions of the input are dynamic. Defaults to
-        False, meaning the shape is static.
-    output_names : Optional[List[str]]
-        List of output headnames for mutli-head classification networks. Defaults to
-        None which will be assigned to ["output"].
-    dummy_forward_input : Optional[torch.Tensor]
-        Dummy forward pass input that will be run through the model for tracing export
-        purposes. Defaults to None meaning a dummy input will be generated.
+    with NamedTemporaryFile() as tempfile:
+        pytorch_to_onnx_file(
+            model,
+            tempfile.name,
+            model_input_height,
+            model_input_width,
+            dynamic_shape=False,
+            dummy_forward_input=dummy_forward_input,
+        )
+        onnx_file_to_s3(
+            tempfile.name,
+            "models",
+            "my model object name",
+            "my model version",
+        )
     ```
 
 
@@ -127,3 +105,13 @@
     ```bash
     docker-compose down
     ```
+
+## Development environment with Docker-Compose
+
+For dev purposes, feel free to edit the startup.sh script and add `tail -f /dev/null` to the end of it so that the docker stays alive and exec into the container like so.
+
+    ```bash
+    docker exec -it icow_model_import_icow_model_import_1 bash
+    ```
+
+Thanks to docker volume mounts, all changes outside and inside of the docker will persist and allow editing and development.
