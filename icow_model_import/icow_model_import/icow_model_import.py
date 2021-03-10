@@ -3,7 +3,6 @@ import logging
 from argparse import ArgumentParser
 from os import environ
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 from typing import Dict, List, Optional, Union
 
 import boto3
