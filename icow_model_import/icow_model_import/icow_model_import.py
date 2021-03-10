@@ -1,5 +1,6 @@
 import logging
 
+from argparse import ArgumentParser
 from os import environ
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -184,4 +185,30 @@ def onnx_file_to_s3(
         model_bucket,
         model_object_name,
         model_version,
+    )
+
+
+def cli() -> None:
+    """Import a model from an existing onnx file into s3 for icow."""
+    parser = ArgumentParser(
+        description="Import a model from an existing onnx file into icow."
+    )
+    parser.add_argument(
+        "onnx_model_path", help="Path to the serialized onnx model file."
+    )
+    parser.add_argument(
+        "model_bucket", help="S3 bucket name for uploading the model to."
+    )
+    parser.add_argument(
+        "model_object_name", help="Name for the uploaded s3 model object."
+    )
+    parser.add_argument(
+        "model_version", help="Version tag added to the uploaded s3 model object."
+    )
+    args = parser.parse_args()
+    onnx_file_to_s3(
+        args.onnx_model_path,
+        args.model_bucket,
+        args.model_object_name,
+        args.model_version,
     )
