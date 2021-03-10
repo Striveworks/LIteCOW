@@ -9,7 +9,7 @@ python = "^3.7"
 boto3 = "^1.17.23"
 boto3-stubs = "^1.17.23.0"
 mypy-boto3-s3 = "^1.17.23.0"
-torch = "^1.8.0"
+torch = "^1.7.0"
 onnxruntime = "^1.7.0"
 
 [tool.poetry.dev-dependencies]
