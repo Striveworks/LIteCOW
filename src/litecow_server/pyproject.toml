@@ -5,8 +5,12 @@ description = ""
 authors = ["Striveworks"]
 
 [tool.poetry.dependencies]
-python = "*"
+python = "^3.6"
 grpcio = "*"
+onnxruntime = "^1.7.0"
+numpy = "^1.17.4"
+boto3 = "^1.11.14"
+pillow = "^8.1.2"
 litecow_common = { path = "../litecow_common" }
 
 [tool.poetry.dev-dependencies]

@@ -1,11 +1,36 @@
 from typing import Optional, Union, List
 from io import BytesIO
+from json import loads
 
 from PIL import Image
-from numpy import ndarray
+import numpy as np
 
 from litecow_common.litecow_pb2 import ComputerVisionRequest
 from litecow_common.litecow_pb2_grpc import ICOWStub
+
+def decode_replacement_hook(obj):
+    """Json object replacement hook that handles np.ndarrays.
+
+    Json object replacement hook that handles np.ndarrays.
+    Intended to be used with python's json.loads or json.load. Will be called as
+    objects are loaded from the json, if the keys match np.ndarray then
+    the respective type, np.ndarray will be loaded instead of
+    the dict representation; otherwise it simply returns the passed dict.
+
+    Parameters:
+    -----------
+    obj: dict
+        A dict representing json loaded so far.
+
+    Returns:
+    --------
+    Union[dict, np.ndarray]
+    """
+    array_key = "np.ndarray"
+
+    if array_key in obj.keys():
+        return np.array(obj[array_key])
+    return obj
 
 def to_image_bytes(image):
     with BytesIO() as image_file:
@@ -16,7 +41,7 @@ class ICOWClient:
     def __init__(self, channel):
         self.stub = ICOWStub(channel)
 
-    def get_cv_inference(self, model_key: str, images: Union[List[Image.Image], Image.Image], model_version: Optional[str] = None) -> ndarray:
+    def get_cv_inference(self, model_key: str, images: Union[List[Image.Image], Image.Image], model_version: Optional[str] = None) -> np.ndarray:
         """ Get computer vision inference with images
 
         Parameters:
@@ -40,4 +65,4 @@ class ICOWClient:
 
         field_names = ComputerVisionRequest.DESCRIPTOR.fields_by_name.keys()
         filtered_kwargs = {key:value for key,value in request_kwargs.items() if key in field_names and value}
-        return self.stub.get_cv_inference(ComputerVisionRequest(**filtered_kwargs)).response
+        return loads(self.stub.get_cv_inference(ComputerVisionRequest(**filtered_kwargs)).response, object_hook=decode_replacement_hook)
