@@ -1,8 +1,8 @@
 This sandbox tutorial is setup to make getting started with ICOW quickly
 
-
+## Install
 ```
-# curl -s https://nacho.striveworks.us/chariot/icow-light/-/raw/sandbox-setup/sandbox/setup.sh | bash 
+# curl -s https://nacho.striveworks.us/chariot/icow-light/-/raw/sandbox-setup/sandbox/setup.sh | bash
 git clone git@nacho.striveworks.us:chariot/icow-light.git
 bash sandbox/setup.sh
 
@@ -24,3 +24,10 @@ and access Minio at [http://localhost:9000](http://localhost:9000)
     |:-|:-|
     |Access Key |`minioadmin`|
     |Secret Key |`minioadmin`|
+
+## Import Model
+Import your first model from the [ONNX Model Zoo](https://github.com/onnx/models)
+
+```
+litecow import-model --source https://github.com/onnx/models/blob/master/vision/object_detection_segmentation/tiny-yolov2/model/tinyyolov2-7.onnx tinyyolov2
+```

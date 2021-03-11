@@ -69,7 +69,25 @@ kubectl patch configmap/config-domain \
   --patch '{"data":{"127.0.0.1.nip.io":""}}'
 
 #Start minio container
-docker run -d -p 9000:9000 minio/minio server /data
+export MINIO_DOCKER_NAME=sandbox-minio
+docker run --name $MINIO_DOCKER_NAME -d -p 9000:9000 minio/minio server /data{1...4}
+sleep 5
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  docker run --rm --link $MINIO_DOCKER_NAME:minio -e MINIO_BUCKET=$MINIO_BUCKET --entrypoint sh minio/mc -c "\
+    sleep 5 && \
+    mc config host add myminio http://minio:9000 \minioadmin \minioadmin && \
+    mc rm -r --force myminio/\models || true && \
+    mc mb myminio/\models && \
+  "
+else
+docker run --rm --link $MINIO_DOCKER_NAME:minio -e MINIO_BUCKET=$MINIO_BUCKET --entrypoint sh minio/mc -c "\
+  sleep 5 && \
+  mc config host add myminio http://minio:9000 \minioadmin \minioadmin && \
+  mc rm -r --force myminio/\models || true && \
+  mc mb myminio/\models && \
+  mc version enable myminio/\models \
+"
+fi
 
 #Load ICOW service container into Kind cluster
 kind load docker-image --name knative dev.local/icow_service:0.1

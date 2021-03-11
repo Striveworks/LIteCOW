@@ -11,13 +11,16 @@ boto3-stubs = "^1.17.23.0"
 mypy-boto3-s3 = "^1.17.23.0"
 torch = "^1.7.0"
 onnxruntime = "^1.7.0"
+requests = "^2.25.1"
+tqdm = "^4.59.0"
+urllib3 = "^1.26.3"
+click = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 
 [tool.poetry.scripts]
-import-onnx-model = 'litecow_models.model_import:cli'
-init-s3 = 'litecow_models.initialize_s3:cli'
+litecow = "litecow_models.cli:cli"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

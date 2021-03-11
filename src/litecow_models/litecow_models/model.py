@@ -1,14 +1,70 @@
 import logging
-
-from argparse import ArgumentParser
-from os import environ
+import os
 from pathlib import Path
 from typing import Dict, List, Optional, Union
+from urllib.parse import urlparse
 
 import boto3
+import botocore
+import requests
 import torch
+from tqdm import tqdm
 
 from mypy_boto3_s3 import S3Client
+
+
+class ModelLoader:
+    @staticmethod
+    def import_model(source: str, model_bucket: str, model_name: str, model_version: str) -> None:
+        """Import model into model registry
+
+        Parameters:
+        -----------
+        source: str
+            Source URL of model
+        model_bucket: str
+            Model registry bucket name
+        model_name: str
+            Name of model
+        model_version : str
+            Version tag for the uploaded object in s3.
+        """
+        scheme, netloc, path, _, _, _ = urlparse(source)
+        if netloc == "github.com":
+            source = convert_github_raw(scheme, netloc, path)
+        if scheme in ("http", "https"):
+            filename = download_file(source)
+        else:
+            filename = source
+        client = create_s3_client()
+        verify_model_version(model_bucket, model_name, model_version, client)
+        client.upload_file(filename, model_bucket, model_name)
+        client.put_object_tagging(
+            Bucket=model_bucket,
+            Key=model_name,
+            Tagging={"TagSet": [{"Key": "model-version", "Value": str(model_version)}]},
+        )
+        logging.info(
+            "Model is available at s3://%s/%s with tag {'model-version': '%s'}",
+            model_bucket,
+            model_name,
+            model_version,
+        )
+
+    @staticmethod
+    def export_model(model_bucket: str, model_name: str) -> None:
+        """Export model from model registry
+
+        Parameters:
+        -----------
+        model_bucket: str
+            Model registry bucket name
+        model_name: str
+            Name of model
+        """
+        client = create_s3_client()
+        client.download_file(model_bucket, model_name, model_name)
+
 
 
 def serialize_model_to_file(
@@ -70,9 +126,12 @@ def verify_model_version(
     """
     bucket = boto3.resource(
         "s3",
-        aws_access_key_id=environ["AWS_ACCESS_KEY"],
-        aws_secret_access_key=environ["AWS_SECRET_KEY"],
-        endpoint_url=environ["S3ENDPOINT_URL"],
+        endpoint_url=os.getenv("S3_URL", "http://localhost:9000"),
+        aws_access_key_id=os.getenv("S3_ACCESS_KEY", "minioadmin"),
+        aws_secret_access_key=os.getenv("S3_SECRET_KEY", "minioadmin"),
+        config=botocore.config.Config(signature_version="s3v4"),
+        region_name=os.getenv("S3_REGION", "us-east-1"),
+        verify=False,
     ).Bucket(model_bucket)
     for version in bucket.object_versions.filter(Prefix=model_name):
         tags = s3_client.get_object_tagging(
@@ -139,75 +198,93 @@ def pytorch_to_onnx_file(
     else:
         dynamic_axes = {"input": {0: "batch_size"}}
     serialize_model_to_file(
-        net, out_file, dummy_forward_input, output_names, dynamic_axes,
+        net,
+        out_file,
+        dummy_forward_input,
+        output_names,
+        dynamic_axes,
     )
 
 
-def onnx_file_to_s3(
-    onnx_model: Union[str, Path],
-    model_bucket: str,
-    model_object_name: str,
-    model_version: str,
-) -> None:
-    """Uploads a given onnx file to s3.
+
+def convert_github_raw(scheme: str, netloc: str, path: str) -> str:
+    """Convert github blob URL to raw content URL
+
+    Parameters:
+    -----------
+    scheme: str
+        URL scheme
+    netloc: str
+        Network host address
+    path: str
+        Path to file
+    """
+    return f"{scheme}://{netloc}{path.replace('blob', 'raw')}"
+
+
+def create_s3_client() -> botocore.client:
+    """Create boto3 S3 client"""
+    return boto3.client(
+        "s3",
+        endpoint_url=os.getenv("S3_URL", "http://localhost:9000"),
+        aws_access_key_id=os.getenv("S3_ACCESS_KEY", "minioadmin"),
+        aws_secret_access_key=os.getenv("S3_SECRET_KEY", "minioadmin"),
+        config=botocore.config.Config(signature_version="s3v4"),
+        region_name=os.getenv("S3_REGION", "us-east-1"),
+        verify=False,
+    )
+
+
+def download_file(url: str) -> str:
+    """Convert github blob URL to raw content URL
+
+    Parameters:
+    -----------
+    url: str
+        Source URL of download
+
+    Returns:
+    --------
+    local_filename: str
+        Local filename of downloaded file
+    """
+    local_filename = f"/tmp/{url.split('/')[-1]}"
+    resp = requests.get(url, stream=True)
+    total = int(resp.headers.get("content-length", 0))
+    with open(local_filename, "wb") as file, tqdm(
+        desc=local_filename,
+        total=total,
+        unit="iB",
+        unit_scale=True,
+        unit_divisor=1024,
+    ) as bar:
+        for data in resp.iter_content(chunk_size=1024):
+            size = file.write(data)
+            bar.update(size)
+    return local_filename
+
+
+def initialize_s3(bucket_name: str) -> None:
+    """Connects to S3, insures that a bucket exists and it has versioning
+    enabled.
 
     Parameters
     ----------
-    onnx_model : Union[str, Path]
-        Path to the onnx model serialized to a file.
-    model_bucket : str
-        Bucket for the model to be uploaded to.
-    model_object_name : str
-        Name for the model to be used in s3.
-    model_version : str
-        Version tag for the uploaded object in s3.
+    bucket_name : str
+        Name of the s3 bucket to init.
     """
+    # Create a client for interaction with the S3 server
+    s3_client = create_s3_client()
 
-    # Validate the given model & model version in S3 and send to the model bucket
-    s3_client = boto3.client(
-        "s3",
-        aws_access_key_id=environ["AWS_ACCESS_KEY"],
-        aws_secret_access_key=environ["AWS_SECRET_KEY"],
-        endpoint_url=environ["S3ENDPOINT_URL"],
-    )
-    verify_model_version(model_bucket, model_object_name, model_version, s3_client)
-    s3_client.upload_file(
-        onnx_model, model_bucket, model_object_name,
-    )
-    s3_client.put_object_tagging(
-        Bucket=model_bucket,
-        Key=model_object_name,
-        Tagging={"TagSet": [{"Key": "model-version", "Value": str(model_version)}]},
-    )
-    logging.info(
-        "Model is available at s3://%s/%s with tag {'model-version': '%s'}",
-        model_bucket,
-        model_object_name,
-        model_version,
-    )
+    # Make the bucket if it doesn't exist
+    try:
+        s3_client.create_bucket(Bucket=bucket_name)
+        logging.info("Created bucket '%s'", bucket_name)
+    except s3_client.exceptions.BucketAlreadyOwnedByYou:
+        logging.info("Bucket '%s' already exists", bucket_name)
 
-
-def cli() -> None:
-    """Import a model from an existing onnx file into s3 for icow."""
-    parser = ArgumentParser(
-        description="Import a model from an existing onnx file into icow."
+    # Enable object versioning on the bucket
+    s3_client.put_bucket_versioning(
+        Bucket=bucket_name, VersioningConfiguration={"Status": "Enabled"},
     )
-    parser.add_argument(
-        "onnx_model_path", help="Path to the serialized onnx model file."
-    )
-    parser.add_argument(
-        "model_bucket", help="S3 bucket name for uploading the model to."
-    )
-    parser.add_argument(
-        "model_object_name", help="Name for the uploaded s3 model object."
-    )
-    parser.add_argument(
-        "model_version", help="Version tag added to the uploaded s3 model object."
-    )
-    args = parser.parse_args()
-    onnx_file_to_s3(
-        args.onnx_model_path,
-        args.model_bucket,
-        args.model_object_name,
-        args.model_version,
-    )
+    logging.info("'%s' bucket versioning enabled", bucket_name)

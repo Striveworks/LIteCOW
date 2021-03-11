@@ -1,9 +1,9 @@
-# ICOW Model Import
+# ICOW Models
 
 
 ## Preparing an S3 Instance
 
-ICOW requires an S3 Instance with versioning enabled. We have a cli command that comes installed with the `litecow_models` package .For development purposes the `docker/dev/litecow_models/docker-compose.yml` shows how a minio docker can be configured for versioning.
+ICOW requires an S3 Instance with versioning enabled. We have a cli command that comes installed with the `litecow_models` package .For development purposes, use the [sandbox](/sandox)
 
 To use the CLI please see the below steps.
 
@@ -15,27 +15,27 @@ To use the CLI please see the below steps.
     AWS_ACCESS_KEY=<Access key for your s3>
     AWS_SECRET_KEY=<Secret key for your s3>
     S3ENDPOINT_URL=<Endpoint for your s3 instance>
-    ``` 
+    ```
 
-2. Use the `init-s3` cli command to initialize a new bucket in the configured S3 instance, passing in the name for an existing bucket that will have versioning enabled, or for a new bucket to be created.
+2. Use the `litecow enable-versioning` cli command to initialize a new bucket in the configured S3 instance, passing in the name for an existing bucket that will have versioning enabled, or for a new bucket to be created.
 
     ```bash
-    init-s3 <bucket name>
+    litecow enable-versioning --model-bucket models
     ```
 
 
 ## How to serialize a Pytorch model for use with ICOW
 
-This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with versioning enabled. For developmental purposes you can copy/change our docker-compose configuration to allow for quick local deployment.
+This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with versioning enabled. For developmental purposes you can launch the [sandbox](/sandbox)
 
 1. Install `litecow_models`
 
 2. Set S3 configuration parameters in the environment including the following.
 
     ```
-    AWS_ACCESS_KEY=<Access key for your s3>
-    AWS_SECRET_KEY=<Secret key for your s3>
-    S3ENDPOINT_URL=<Endpoint for your s3 instance>
+    S3_ACCESS_KEY=<Access key for your s3>
+    S3_SECRET_KEY=<Secret key for your s3>
+    S3_URL=<Endpoint for your s3 instance>
     ```
 
 3. Import `pytorch_to_onnx_file` and `onnx_file_to_s3` from `litecow_models` wherever your model can be loaded or is defined and call it with the desired parameters. An example of this can be seen below.
@@ -94,7 +94,7 @@ This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with v
         if not self.classification:
             input_tensor = torch.nn.functional.normalize(input_tensor)
         return input_tensor
-    
+
     model = SimpleMLP()
     dummy_forward_input = torch.randn(1, 1, 256).to(
         "cuda" if torch.cuda.is_available() else "cpu"
@@ -117,75 +117,13 @@ This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with v
     ```
 
 
-## Using ICOW Model Import's CLI to Upload Serialized ONNX Models
+## Using litecow CLI to Upload Serialized ONNX Models
 
 This guide assumes you already have serialized ONNX models that you would like to use with ICOW.
 
 1. Install `litecow_models`.
 
-2. Run the cli for importing onnx models. See its usage below.
-
-    ```
-    usage: import-onnx-model [-h]
-                         onnx_model_path model_bucket model_object_name
-                         model_version
-
-    Import a model from an existing onnx file into icow.
-
-    positional arguments:
-    onnx_model_path    Path to the serialized onnx model file.
-    model_bucket       S3 bucket name for uploading the model to.
-    model_object_name  Name for the uploaded s3 model object.
-    model_version      Version tag added to the uploaded s3 model object.
-    ```
-
-    Running this from the command line should look like the following.
-
-    ```bash
-    import-onnx-model tests/data/simple_onnx_model.onnx models simple_model my-version
-    ```
-
-    If using poetry it would instead look like the following command.
-
-    ```bash
-    poetry run import-onnx-model tests/data/simple_onnx_model.onnx models simple_model my-version
-    ``` 
-
-
-## Testing with Docker Compose
-
-1. Start the docker-compose stack. This will create the nescessary containers and kick off appropriate processes for testing.
-
-    ```bash
-    docker-compose -f docker/dev/litecow_models/docker-compose.yml --project-directory . up --build
-    ```
-
-2. Stop the docker-compose stack after testing finishes. You can use `CTRL + C` or if you started the compose stack detached you can use the following command to stop the containers.
-
-    ```bash
-    docker-compose -f docker/dev/litecow_models/docker-compose.yml down
-    ```
-
-## Development environment with Docker-Compose
-
-For dev purposes, feel free to edit the docker-compose file from 
-
-
-    icow_model_import:
-        ...
-        command: make test
-        ...
-    
-to the following changing the make recipe used in the startup command.
-
-
-    icow_model_import:
-        ...
-        command: make stay-alive
-        ...
-
-so that the docker stays alive and it's possible to exec into the container like so.
-
-    docker exec -it icow-light_litecow_models_1 bash
-
-Once inside run any python related commands with poetry. E.g. `poetry run python my_script.py` or `poetry run pytest`. Thanks to docker volume mounts, all changes outside and inside of the docker will persist and allow editing and development.
+2. Upload a model
+  ```
+  litecow import-model --source ./tinyyolov2-7.onnx tinyyolov2
+  ```
