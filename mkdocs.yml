@@ -14,6 +14,7 @@ nav:
   - Getting Started:
     - Sandbox: sandbox.md
     - Installation: install.md
+    - ICOW Models: models.md
     - ICOW Python Client: pycow.md
 
 theme:
