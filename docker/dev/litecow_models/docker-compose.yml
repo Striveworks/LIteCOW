@@ -16,13 +16,13 @@ services:
       MINIO_ACCESS_KEY: test
       MINIO_SECRET_KEY: testtest
 
-  icow_model_import:
+  litecow_models:
     build:
       context: .
-      dockerfile: docker/Dockerfile
-    command: make test
+      dockerfile: docker/dev/litecow_models/Dockerfile
+    command: make stay-alive
     volumes: 
-      - ./:/icow_model_import
+      - ./src/litecow_models/:/litecow_models
     environment: 
       - AWS_ACCESS_KEY=test
       - AWS_SECRET_KEY=testtest

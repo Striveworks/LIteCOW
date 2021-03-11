@@ -5,7 +5,7 @@ import pytest
 
 from mypy_boto3_s3 import S3Client
 
-from icow_model_import.initialize_s3 import initialize_s3
+from litecow_models.initialize_s3 import initialize_s3
 
 
 # initialize_s3
