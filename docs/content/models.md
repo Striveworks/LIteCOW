@@ -3,11 +3,11 @@
 
 ## Preparing an S3 Instance
 
-ICOW requires an S3 Instance with versioning enabled. We have a cli command that comes installed with the `icow_model_import` package .For development purposes the `icow_model_import/docker-compose.yml` shows how a minio docker can be configured for versioning.
+ICOW requires an S3 Instance with versioning enabled. We have a cli command that comes installed with the `litecow_models` package .For development purposes the `docker/dev/litecow_models/docker-compose.yml` shows how a minio docker can be configured for versioning.
 
 To use the CLI please see the below steps.
 
-1. Install `icow_model_import`.
+1. Install `litecow_models`.
 
 2. Set S3 configuration parameters in the environment including the following.
 
@@ -28,7 +28,7 @@ To use the CLI please see the below steps.
 
 This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with versioning enabled. For developmental purposes you can copy/change our docker-compose configuration to allow for quick local deployment.
 
-1. Install `icow_model_import`
+1. Install `litecow_models`
 
 2. Set S3 configuration parameters in the environment including the following.
 
@@ -38,14 +38,14 @@ This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with v
     S3ENDPOINT_URL=<Endpoint for your s3 instance>
     ```
 
-3. Import `pytorch_to_onnx_file` and `onnx_file_to_s3` from `icow_model_import` wherever your model can be loaded or is defined and call it with the desired parameters. An example of this can be seen below.
+3. Import `pytorch_to_onnx_file` and `onnx_file_to_s3` from `litecow_models` wherever your model can be loaded or is defined and call it with the desired parameters. An example of this can be seen below.
 
     ```python
     from tempfile import NamedTemporaryFile
 
     import torch
 
-    from icow_model_import import onnx_file_to_s3, pytorch_to_onnx_file
+    from litecow_models.model_import import onnx_file_to_s3, pytorch_to_onnx_file
 
 
     class SimpleMLP(torch.nn.Module):
@@ -121,7 +121,7 @@ This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with v
 
 This guide assumes you already have serialized ONNX models that you would like to use with ICOW.
 
-1. Install `icow_model_import`.
+1. Install `litecow_models`.
 
 2. Run the cli for importing onnx models. See its usage below.
 
@@ -157,13 +157,13 @@ This guide assumes you already have serialized ONNX models that you would like t
 1. Start the docker-compose stack. This will create the nescessary containers and kick off appropriate processes for testing.
 
     ```bash
-    docker-compose up --build
+    docker-compose -f docker/dev/litecow_models/docker-compose.yml --project-directory . up --build
     ```
 
 2. Stop the docker-compose stack after testing finishes. You can use `CTRL + C` or if you started the compose stack detached you can use the following command to stop the containers.
 
     ```bash
-    docker-compose down
+    docker-compose -f docker/dev/litecow_models/docker-compose.yml down
     ```
 
 ## Development environment with Docker-Compose
@@ -186,6 +186,6 @@ to the following changing the make recipe used in the startup command.
 
 so that the docker stays alive and it's possible to exec into the container like so.
 
-    docker exec -it icow_model_import_icow_model_import_1 bash
+    docker exec -it icow-light_litecow_models_1 bash
 
 Once inside run any python related commands with poetry. E.g. `poetry run python my_script.py` or `poetry run pytest`. Thanks to docker volume mounts, all changes outside and inside of the docker will persist and allow editing and development.

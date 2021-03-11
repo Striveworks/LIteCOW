@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "icow_model_import"
+name = "litecow_models"
 version = "0.1.0"
 description = ""
 authors = ["Julian Medina <jmedina@striveworks.us>"]
@@ -17,8 +17,8 @@ minio = "^7.0.2"
 pytest = "^5.2"
 
 [tool.poetry.scripts]
-import-onnx-model = 'icow_model_import.icow_model_import:cli'
-init-s3 = 'icow_model_import.initialize_s3:cli'
+import-onnx-model = 'litecow_models.model_import:cli'
+init-s3 = 'litecow_models.initialize_s3:cli'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

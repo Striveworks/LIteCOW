@@ -11,7 +11,7 @@ import torch
 from mypy_boto3_s3 import S3Client
 from mypy_boto3_s3.service_resource import Bucket
 
-from icow_model_import import (
+from litecow_models.model_import import (
     onnx_file_to_s3,
     pytorch_to_onnx_file,
     serialize_model_to_file,
