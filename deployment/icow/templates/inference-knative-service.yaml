@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: icow-service
+  labels:
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    spec:
+      containers:
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["litecow-service"]
+        args: ["10", "8080"]
+        ports:
+        - containerPort: 8080
+          name: h2c
+        env:
+        - name: AWS_ACCESS_KEY
+          value: {{ .Values.s3.access_key }}
+        - name: AWS_SECRET_KEY
+          value: {{ .Values.s3.secret_key }}
+        - name: S3ENDPOINT_URL
+          value: {{ .Values.s3.endpoint }}

@@ -4,7 +4,7 @@ set -e
 unset DOCKER_HOST
 
 #Build ICOW service container
-docker build -t dev.local/icow_service:0.1 -f docker/server/Dockerfile .
+docker build -t dev.local/icow_service -f docker/server/Dockerfile src
 
 #Write Kind cluster config
 cat > clusterconfig.yaml <<EOF
@@ -17,110 +17,77 @@ nodes:
     hostPort: 80
   - containerPort: 31443
     hostPort: 443
+  - containerPort: 32000
+    hostPort: 9000
 EOF
+
+
 
 #Create Kind cluster
 kind create cluster --name knative --config clusterconfig.yaml
 
-#Apply knative manifests
+#Load ICOW service container into Kind cluster
+kind load docker-image --name knative dev.local/icow_service
+
 kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-crds.yaml
 kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-core.yaml
 
-curl -Lo kourier.yaml https://github.com/knative-sandbox/net-kourier/releases/download/v0.21.0/kourier.yaml
-cat > kourier-patch.yaml <<EOF
-apiVersion: v1
-kind: Service
-metadata:
-  name: kourier
-  namespace: kourier-system
-  labels:
-    networking.knative.dev/ingress-provider: kourier
-spec:
-  ports:
-  - name: http2
-    port: 80
-    protocol: TCP
-    targetPort: 8080
-    nodePort: 31080
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 8443
-    nodePort: 31443
-  selector:
-    app: 3scale-kourier-gateway
-  type: NodePort
-EOF
 
-#Install kourier
-kubectl apply -f kourier.yaml
-kubectl apply -f kourier-patch.yaml
-
-#Patch network
-kubectl patch configmap/config-network \
+  kubectl patch configmap/config-network \
   --namespace knative-serving \
   --type merge \
   --patch '{"data":{"ingress.class":"kourier.ingress.networking.knative.dev"}}'
 
-#Patch DNS
-kubectl patch configmap/config-domain \
-  --namespace knative-serving \
-  --type merge \
-  --patch '{"data":{"127.0.0.1.nip.io":""}}'
+  kubectl patch configmap/config-domain \
+    --namespace knative-serving \
+    --type merge \
+    --patch '{"data":{"127.0.0.1.nip.io":""}}'
 
-#Start minio container
-export MINIO_DOCKER_NAME=sandbox-minio
-docker run --name $MINIO_DOCKER_NAME -d -p 9000:9000 minio/minio server /data{1...4}
-sleep 5
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  docker run --rm --link $MINIO_DOCKER_NAME:minio -e MINIO_BUCKET=$MINIO_BUCKET --entrypoint sh minio/mc -c "\
-    sleep 5 && \
-    mc config host add myminio http://minio:9000 \minioadmin \minioadmin && \
-    mc rm -r --force myminio/\models || true && \
-    mc mb myminio/\models && \
-  "
-else
-docker run --rm --link $MINIO_DOCKER_NAME:minio -e MINIO_BUCKET=$MINIO_BUCKET --entrypoint sh minio/mc -c "\
-  sleep 5 && \
-  mc config host add myminio http://minio:9000 \minioadmin \minioadmin && \
-  mc rm -r --force myminio/\models || true && \
-  mc mb myminio/\models && \
-  mc version enable myminio/\models \
-"
-fi
+helm install --set minio.service.type=NodePort --skip-crds --create-namespace icow -n icow deployment/icow
 
-#Load ICOW service container into Kind cluster
-kind load docker-image --name knative dev.local/icow_service:0.1
+cat > kourier-patch.yaml <<EOF
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: kourier
+    namespace: kourier-system
+    labels:
+      networking.knative.dev/ingress-provider: kourier
+  spec:
+    ports:
+    - name: http2
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 31080
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8443
+      nodePort: 31443
+    selector:
+      app: 3scale-kourier-gateway
+    type: NodePort
+EOF
 
-#Write Knative manifest for ICOW
-cat > inference_cattle.yaml <<EOF
-apiVersion: serving.knative.dev/v1
+kubectl apply -f kourier-patch.yaml
+
+cat > service.yaml <<EOF
+apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
-  name: inference-service
-  namespace: default
+  name: helloworld-go # The name of the app
+  namespace: default # The namespace the app will use
 spec:
   template:
     spec:
       containers:
-      - image: dev.local/icow_service:0.1
-        imagePullPolicy: IfNotPresent
-        command: ["icow-service"]
-        args: ["10", "8080"]
-        ports:
-        - containerPort: 8080
-          name: h2c
-        env:
-        - name: AWS_ACCESS_KEY
-          value: minioadmin
-        - name: AWS_SECRET_KEY
-          value: minioadmin
-        - name: S3ENDPOINT_URL
-          value: http://localhost:9000
+        - image: gcr.io/knative-samples/helloworld-go # The URL to the image of the app
+          env:
+            - name: TARGET # The environment variable printed out by the sample app
+              value: "Hello Knative Serving is up and running with Kourier!!"
 EOF
 
-#Install ICOW Knative service
-kubectl apply -f inference_cattle.yaml
 
 echo "Setup complete 🎉"
 #Keep container alive indefinitely

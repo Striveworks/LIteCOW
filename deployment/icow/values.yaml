@@ -1,0 +1,48 @@
+# Default values for icow.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: dev.local/icow_service
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+s3:
+  access_key: "minioadmin"
+  secret_key: "minioadmin"
+  endpoint: "http://icow-minio.icow.svc.cluster.local:9000"
+
+annotations: []
+
+
+minio:
+  mode: distributed
+  # Number of drives attached to a node
+  drivesPerNode: 4
+  # Number of MinIO containers running
+  replicas: 2
+  # Number of expanded MinIO clusters
+  zones: 1
+  accessKey: "minioadmin"
+  secretKey: "minioadmin"
+
+  service:
+    type: ClusterIP
+
+
+knative-serving:
+  addons:
+    certmanager:
+      enabled: false
+      # issuer_kind is a reference to the issuer for this certificate.
+      # issuer_kind should be either `ClusterIssuer` or `Issuer`.
+      # Please refer `IssuerRef` in https://github.com/jetstack/cert-manager/blob/master/pkg/apis/certmanager/v1alpha1/types_certificate.go
+      # for more details about issuer_kind configuration.
+      issuer_kind: ""
+      issuer_name: ""
+
+    hpa:
+      enabled: false
+
+  dns:
+    enabled: false

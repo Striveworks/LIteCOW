@@ -10,6 +10,8 @@ def prepare_array(array: np.ndarray) -> litecow_pb2.Array:
     array_cls = {
         "float64": ("double_array", litecow_pb2.DoubleArray),
         "float32": ("float_array", litecow_pb2.FloatArray),
+        "int32": ("int32_array", litecow_pb2.Int32Array),
+        "int64": ("int64_array", litecow_pb2.Int64Array),
     }
     f_name, cls = array_cls[array_type]
     kwargs = {"shape": array.shape, f_name: cls(values=array.flatten().tolist())}
@@ -34,6 +36,10 @@ def unprepare_array(array:  litecow_pb2.Array) -> np.ndarray:
         np_array = np.float64(array.double_array.values)
     elif array.HasField('float_array'):
         np_array = np.float32(array.float_array.values)
+    elif array.HasField('int32_array'):
+        np_array = np.int32(array.int32_array.values)
+    elif array.HasField('int64_array'):
+        np_array = np.int64(array.int64_array.values)
     return np_array.reshape(array.shape)
 
 def unprepare_named_arrays(named_arrays: litecow_pb2.NamedArrays) -> Dict[str, np.ndarray]:

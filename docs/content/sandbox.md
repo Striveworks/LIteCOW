@@ -29,5 +29,5 @@ and access Minio at [http://localhost:9000](http://localhost:9000)
 Import your first model from the [ONNX Model Zoo](https://github.com/onnx/models)
 
 ```
-litecow import-model --source https://github.com/onnx/models/blob/master/vision/object_detection_segmentation/tiny-yolov2/model/tinyyolov2-7.onnx tinyyolov2
+litecow import-model --sourcehttps://github.com/onnx/models/blob/master/vision/object_detection_segmentation/tiny-yolov3/model/tiny-yolov3-11.onnx tinyyolov3
 ```

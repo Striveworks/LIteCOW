@@ -1,11 +1,19 @@
 .PHONY: sandbox
 sandbox:
-	sudo docker build -t sandbox -f sandbox/Dockerfile .
-	sudo docker run -d --privileged --network host -v /var/run/docker.sock:/var/run/docker.sock sandbox
+	docker build -t sandbox -f sandbox/Dockerfile .
+	docker run --name sandbox -d --privileged --network host -v /var/run/docker.sock:/var/run/docker.sock sandbox
+	@echo ""
+	@echo ""
+	@echo "Run the following to check the status: "
+	@echo 'docker ps -aqf "name=sandbox" | xargs docker logs -f'
+	@echo ""
+	@echo "Exec into the sandbox: "
+	@echo "docker exec -it sandbox sh"
 
 .PHONY: cleanup
 cleanup:
-	sudo docker run -it --privileged --network host -v /var/run/docker.sock:/var/run/docker.sock sandbox kind delete cluster --name knative
+	docker run -it --privileged --network host -v /var/run/docker.sock:/var/run/docker.sock sandbox kind delete cluster --name knative
+	docker rm -f sandbox
 
 .PHONY: litecow_server
 litecow_server:
