@@ -7,16 +7,20 @@ authors = ["Striveworks"]
 [tool.poetry.dependencies]
 python = "^3.6"
 grpcio = "*"
-onnxruntime = "^1.7.0"
+onnxruntime = {version = "^1.7.0", optional = true }
+onnxruntime-gpu = {version = "^1.7.0", optional = true}
 numpy = "^1.17.4"
 boto3 = "^1.11.14"
-pillow = "^8.1.2"
 litecow_common = { path = "../litecow_common" }
 
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
 litecow-service = 'litecow_server.service:main'
+
+[tool.poetry.extras]
+gpu = ["onnxruntime-gpu"]
+cpu = ["onnxruntime"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

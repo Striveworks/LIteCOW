@@ -2,17 +2,46 @@ syntax = "proto3";
 
 /* Inference with Collected Onnx Weights service definition */
 service ICOW {
-  // get compute vision inference
-  rpc get_cv_inference(ComputerVisionRequest) returns (ResponseDict) {};
+  // get inference
+  rpc get_inference(InferenceRequest) returns (NamedArrays) {};
 }
 
-message ComputerVisionRequest {
+// message to send an InferenceRequest
+message InferenceRequest {
   string model_key = 1; // s3 model key to the desired model in storage
   string model_version = 2; // optional version of the model to use
-  repeated bytes images_bytes = 3; // repeated bytes representing the images to run inference on
+  oneof inputs {
+    NamedArrays named_inputs = 3; // named inputs
+    ArrayList unnamed_inputs = 4; // unnamed inputs, these will be zipped to the input_names of the network
+  }
+  repeated string outputs = 5; // the outputs the requester would like to recieve (omit for all)*/
 }
 
-/* ResponseDict represents a json encoded response for any calls to the service */
-message ResponseDict {
-  string response = 1; // string encoded json response
+// message to send a group of named arrays
+message NamedArrays {
+  map<string, Array> name_to_array = 1; // map of name to array
+}
+
+// message to send a list of arrays
+message ArrayList {
+  repeated Array arrays = 1; // list of arrays
+}
+
+// message to send an array
+message Array {
+  repeated uint32 shape = 1;  // shape of the array
+  oneof array {
+    FloatArray float_array = 2; // float values
+    DoubleArray double_array = 3; // double values
+  }
+}
+
+// message for a float (32 bit) array's values
+message FloatArray {
+  repeated float values = 1; // values of the cells in an array
+}
+
+// message for a double (64 bit) array's values
+message DoubleArray {
+  repeated double values = 1; // values of the cells in an array
 }

@@ -1,46 +1,17 @@
 from tempfile import NamedTemporaryFile
 from concurrent.futures import ThreadPoolExecutor
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 from argparse import ArgumentParser
 from os import environ
 from urllib.parse import urlparse
-from json import JSONEncoder, dumps
-from io import BytesIO
 
 import boto3
 import grpc
 from onnxruntime import InferenceSession
-from PIL import Image
 import numpy as np
 
 from litecow_common.litecow_pb2_grpc import ICOWServicer, add_ICOWServicer_to_server
-from litecow_common.litecow_pb2 import ResponseDict
-
-
-class ResponseJSONEncoder(JSONEncoder):
-    """Custom Json Encoder to np.ndarrays in json."""
-
-    def default(self, o):
-        """Returns a serializeable object for argument o or raises an exception if not serializable.
-
-        Parameters:
-        -----------
-        o : obj
-            Object to make serializable.
-
-        Returns:
-        --------
-        dict
-        """
-        type_conv = {
-            np.ndarray: lambda o: {"np.ndarray": o.tolist()},
-        }
-        return type_conv.get(type(o), super().default)(o)
-
-
-def array_from_image(image_bytes):
-    with BytesIO(image_bytes) as image_file:
-        return Image.open(image_file).convert("RGB")
+from litecow_common import common
 
 
 class ICOWServicer(ICOWServicer):
@@ -72,20 +43,20 @@ class ICOWServicer(ICOWServicer):
             endpoint_url=endpoint_url,
         )
 
-    def get_cv_inference(self, request, context):
-        """Handles requests for service get_cv_inference calls.
+    def get_inference(self, request, context):
+        """Handles requests for service get_inference calls.
 
         Parameters:
         -----------
-        request: litecow_common.litecow_pb2.ComputerVisionRequest
-            The ComputerVisionRequest to answer.
+        request: litecow_common.litecow_pb2.InferenceRequest
+            The InferenceRequest to answer.
         context: grpc.ServicerContext
             The context for this request
 
         Returns:
         --------
-        litecow_common.litecow_pb2.ResponseDict
-            Inference is encoded as string json and returned as ResponseDict
+        Union[litecow_common.litecow_pb2.NamedArrays, litecow_common.litecow_pb2.ArrayList]
+            Outputs of inference encoded as a NamedArrays
         """
         # first retrieve model
         try:
@@ -97,20 +68,31 @@ class ICOWServicer(ICOWServicer):
             context.set_details(f"Error occured while loading model from s3:\n{error}")
             raise error
 
-        # run over the batch
-        input_name = model.get_inputs()[0].name
+        # get inputs ready for model
+        if request.HasField('named_inputs'):
+            inputs = common.unprepare_named_arrays(request.named_inputs)
+        elif request.HasField('unnamed_inputs'):
+            inputs = common.unprepare_array_list(request.unnamed_inputs)
+            inputs = {model_input.name:array for model_input, array in zip(model.get_inputs(), inputs)}
+        else:
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("Client provided request without inputs")
+            raise ValueError("Request must have value for named_inputs or unnamed_inputs")
+
+        outputs = request.outputs
         try:
-            # TODO decide what to do on differently sized images
-            # TODO fix batch size on memory issue
-            image_batch = np.moveaxis(np.float32(np.stack(list(map(array_from_image, request.images_bytes)), 0) / 255.0), -1, 1)
-            result = model.run(None, {input_name: image_batch})
+            result = model.run(outputs, inputs)
         except Exception as error:
             context.set_code(grpc.StatusCode.UNKNOWN)
             context.set_details(f"Error occured while doing inference:\n{error}")
             raise error
 
-        # convert result to json
-        return ResponseDict(response=dumps(result, cls=ResponseJSONEncoder))
+        # label and prepare result to be sent
+        output_labels = map(lambda x: x.name, model.get_outputs())
+        output_labels = filter(lambda x: x in outputs, output_labels) if outputs else output_labels
+        labeled_result = {name:array for name,array in zip(output_labels, result)}
+
+        return common.prepare_named_arrays(labeled_result)
 
     def _get_model_version_from_s3(
         self, s3_path: str, model_version: Optional[str]

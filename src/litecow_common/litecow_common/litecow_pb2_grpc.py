@@ -15,10 +15,10 @@ class ICOWStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.get_cv_inference = channel.unary_unary(
-                '/ICOW/get_cv_inference',
-                request_serializer=litecow__common_dot_litecow__pb2.ComputerVisionRequest.SerializeToString,
-                response_deserializer=litecow__common_dot_litecow__pb2.ResponseDict.FromString,
+        self.get_inference = channel.unary_unary(
+                '/ICOW/get_inference',
+                request_serializer=litecow__common_dot_litecow__pb2.InferenceRequest.SerializeToString,
+                response_deserializer=litecow__common_dot_litecow__pb2.NamedArrays.FromString,
                 )
 
 
@@ -26,8 +26,8 @@ class ICOWServicer(object):
     """Inference with Collected Onnx Weights service definition 
     """
 
-    def get_cv_inference(self, request, context):
-        """get compute vision inference
+    def get_inference(self, request, context):
+        """get inference
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -36,10 +36,10 @@ class ICOWServicer(object):
 
 def add_ICOWServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'get_cv_inference': grpc.unary_unary_rpc_method_handler(
-                    servicer.get_cv_inference,
-                    request_deserializer=litecow__common_dot_litecow__pb2.ComputerVisionRequest.FromString,
-                    response_serializer=litecow__common_dot_litecow__pb2.ResponseDict.SerializeToString,
+            'get_inference': grpc.unary_unary_rpc_method_handler(
+                    servicer.get_inference,
+                    request_deserializer=litecow__common_dot_litecow__pb2.InferenceRequest.FromString,
+                    response_serializer=litecow__common_dot_litecow__pb2.NamedArrays.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -53,7 +53,7 @@ class ICOW(object):
     """
 
     @staticmethod
-    def get_cv_inference(request,
+    def get_inference(request,
             target,
             options=(),
             channel_credentials=None,
@@ -63,8 +63,8 @@ class ICOW(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ICOW/get_cv_inference',
-            litecow__common_dot_litecow__pb2.ComputerVisionRequest.SerializeToString,
-            litecow__common_dot_litecow__pb2.ResponseDict.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ICOW/get_inference',
+            litecow__common_dot_litecow__pb2.InferenceRequest.SerializeToString,
+            litecow__common_dot_litecow__pb2.NamedArrays.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

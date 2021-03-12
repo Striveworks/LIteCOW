@@ -8,6 +8,7 @@ authors = ["Striveworks"]
 python = "*"
 grpcio = "^1.33.2"
 protobuf = "*"
+numpy = "^1.17.4"
 
 [tool.poetry.dev-dependencies]
 grpcio-tools = "^1.34.0"
