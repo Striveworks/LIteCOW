@@ -10,8 +10,8 @@ import grpc
 from onnxruntime import InferenceSession
 import numpy as np
 
-from litecow_common.litecow_pb2_grpc import ICOWServicer, add_ICOWServicer_to_server
-from litecow_common import common
+from litecow.common.litecow_pb2_grpc import ICOWServicer, add_ICOWServicer_to_server
+from litecow.common import common
 
 
 class ICOWServicer(ICOWServicer):

@@ -4,9 +4,9 @@ from json import loads
 
 import numpy as np
 
-from litecow_common.litecow_pb2 import InferenceRequest
-from litecow_common.litecow_pb2_grpc import ICOWStub
-from litecow_common import common
+from litecow.common.litecow_pb2 import InferenceRequest
+from litecow.common.litecow_pb2_grpc import ICOWStub
+from litecow.common import common
 
 
 class ICOWClient:

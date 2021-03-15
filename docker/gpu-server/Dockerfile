@@ -2,11 +2,10 @@ FROM python:3.7.9 as builder
 RUN python3.7 -m pip install --upgrade pip && \
     python3.7 -m pip install poetry && \
     poetry config virtualenvs.in-project true
-COPY ./litecow_common/ litecow_common/
-COPY ./litecow_server/pyproject.toml litecow_server/pyproject.toml
-RUN (cd /litecow_server && poetry install -E gpu)
-COPY ./litecow_server/litecow_server litecow_server/litecow_server
-RUN (cd /litecow_server; poetry install -E gpu)
+COPY ./litecow/pyproject.toml litecow/pyproject.toml
+RUN (cd /litecow && poetry install -E server-gpu)
+COPY ./litecow/litecow ./litecow/litecow
+RUN (cd /litecow; poetry install -E server-gpu)
 
 FROM nvidia/cuda:11.2.1-cudnn8-runtime
 RUN apt update -y && \
@@ -17,5 +16,5 @@ RUN apt update -y && \
 	apt autoremove -y && \
 	ln -s /usr/bin/python3.7 /usr/local/bin
 
-COPY --from=builder /litecow_server/ /litecow_server/
-ENV PATH="/litecow_server/.venv/bin:$PATH"
+COPY --from=builder /litecow/ /litecow/
+ENV PATH="/litecow/.venv/bin:$PATH"

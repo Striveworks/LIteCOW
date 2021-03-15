@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from litecow_common import litecow_pb2 as litecow__common_dot_litecow__pb2
+from litecow.common import litecow_pb2 as litecow_dot_common_dot_litecow__pb2
 
 
 class ICOWStub(object):
@@ -17,8 +17,8 @@ class ICOWStub(object):
         """
         self.get_inference = channel.unary_unary(
                 '/ICOW/get_inference',
-                request_serializer=litecow__common_dot_litecow__pb2.InferenceRequest.SerializeToString,
-                response_deserializer=litecow__common_dot_litecow__pb2.NamedArrays.FromString,
+                request_serializer=litecow_dot_common_dot_litecow__pb2.InferenceRequest.SerializeToString,
+                response_deserializer=litecow_dot_common_dot_litecow__pb2.NamedArrays.FromString,
                 )
 
 
@@ -38,8 +38,8 @@ def add_ICOWServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'get_inference': grpc.unary_unary_rpc_method_handler(
                     servicer.get_inference,
-                    request_deserializer=litecow__common_dot_litecow__pb2.InferenceRequest.FromString,
-                    response_serializer=litecow__common_dot_litecow__pb2.NamedArrays.SerializeToString,
+                    request_deserializer=litecow_dot_common_dot_litecow__pb2.InferenceRequest.FromString,
+                    response_serializer=litecow_dot_common_dot_litecow__pb2.NamedArrays.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -64,7 +64,7 @@ class ICOW(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ICOW/get_inference',
-            litecow__common_dot_litecow__pb2.InferenceRequest.SerializeToString,
-            litecow__common_dot_litecow__pb2.NamedArrays.FromString,
+            litecow_dot_common_dot_litecow__pb2.InferenceRequest.SerializeToString,
+            litecow_dot_common_dot_litecow__pb2.NamedArrays.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -2,3 +2,4 @@
 *.lock*
 __pycache__/
 .pytest_cache/
+0_docs/build/
