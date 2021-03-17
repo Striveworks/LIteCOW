@@ -129,10 +129,6 @@ def main():
 
     draw_boxes(img_path, v_boxes, v_labels, v_scores)
 
-    # summarize what we found
-    for i in range(len(v_boxes)):
-        print(v_labels[i], v_scores[i])
-
 
 if __name__ == '__main__':
      main()

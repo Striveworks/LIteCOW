@@ -25,4 +25,4 @@ litecow_server_gpu:
 
 .PHONY: docs
 docs:
-	sudo docker build -t docs -f docker/docs/Dockerfile .
+	docker build -t docs -f docker/docs/Dockerfile .

@@ -16,9 +16,9 @@ To use the CLI please see the below steps.
 2. Set S3 configuration parameters in the environment including the following.
 
     ```
-    S3_ACCESS_KEY=<Access key for your s3>
-    S3_SECRET_KEY=<Secret key for your s3>
-    S3_URL=<Endpoint for your s3 instance>
+    export S3_ACCESS_KEY=<Access key for your s3>
+    export S3_SECRET_KEY=<Secret key for your s3>
+    export S3_URL=<Endpoint for your s3 instance>
     ```
 
 2. Use the `litecow enable-versioning` cli command to initialize a new bucket in the configured S3 instance, passing in the name for an existing bucket that will have versioning enabled, or for a new bucket to be created.
@@ -37,9 +37,9 @@ This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with v
 2. Set S3 configuration parameters in the environment including the following.
 
     ```
-    S3_ACCESS_KEY=<Access key for your s3>
-    S3_SECRET_KEY=<Secret key for your s3>
-    S3_URL=<Endpoint for your s3 instance>
+    export S3_ACCESS_KEY=<Access key for your s3>
+    export S3_SECRET_KEY=<Secret key for your s3>
+    export S3_URL=<Endpoint for your s3 instance>
     ```
 
 3. Import `pytorch_to_onnx_file` and `onnx_file_to_s3` from `litecow_models` wherever your model can be loaded or is defined and call it with the desired parameters. An example of this can be seen below.
