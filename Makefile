@@ -32,4 +32,6 @@ publish-docs:
 	git checkout gh-pages
 	docker run --rm -d -p 8000:80 --name docs docs
 	docker cp docs:/usr/local/apache2/htdocs/. .
+	docker stop docs
 	git commit -am "Update docs"
+	git checkout main
