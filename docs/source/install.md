@@ -6,7 +6,7 @@ For a quick install, use the [sandbox](/sandbox)
 See [Installing Helm](https://helm.sh/docs/intro/install/) for instructions on installing Helm
 
 ```
-git clone git@nacho.striveworks.us:chariot/icow-light.git
+git clone git@github.com:Striveworks/LIteCOW.git
 cd icow-light
 helm install -n icow --create-namespace icow .
 ```

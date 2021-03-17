@@ -17,12 +17,19 @@ cleanup:
 
 .PHONY: litecow_server
 litecow_server:
-	sudo docker build -t litecow_server -f docker/server/Dockerfile src
+	docker build -t litecow_server -f docker/server/Dockerfile src
 
 .PHONY: litecow_server_gpu
 litecow_server_gpu:
-	sudo docker build -t litecow_server:gpu -f docker/gpu-server/Dockerfile src
+	docker build -t litecow_server:gpu -f docker/gpu-server/Dockerfile src
 
 .PHONY: docs
 docs:
 	docker build -t docs -f docker/docs/Dockerfile .
+
+.PHONY: publish-docs
+publish-docs:
+	git checkout gh-pages
+	docker run --rm -d -p 8000:80 --name docs docs
+	docker cp docs:/usr/local/apache2/htdocs/. .
+	git commit -am "Update docs"
