@@ -4,14 +4,12 @@ This sandbox tutorial is setup to make getting started with ICOW quickly
 
 ## Install
 ```
-# curl -s https://nacho.striveworks.us/chariot/icow-light/-/raw/sandbox-setup/sandbox/setup.sh | bash
-git clone git@nacho.striveworks.us:chariot/icow-light.git
-bash sandbox/setup.sh
+# curl -s https://raw.githubusercontent.com/Striveworks/LIteCOW/main/sandbox/setup.sh?token=AD5TAFY32MHFIQ2B6LVNQFTAKJQIQ | bash
 
 ```
 or
 ```
-git clone git@nacho.striveworks.us:chariot/icow-light.git
+git clone git@github.com:Striveworks/LIteCOW.git
 make sandbox
 ```
 
