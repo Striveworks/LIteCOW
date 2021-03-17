@@ -34,4 +34,5 @@ publish-docs:
 	docker cp docs:/usr/local/apache2/htdocs/. .
 	docker stop docs
 	git commit -am "Update docs"
+	git push
 	git checkout main
