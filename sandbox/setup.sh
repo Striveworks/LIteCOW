@@ -7,7 +7,7 @@ REPO_URL="git@nacho.striveworks.us:chariot/icow-light.git"
 clone_repo() {
   echo ""
   echo "Cloning repo..."
-  git clone --single-branch --branch sandbox-setup "$REPO_URL" > /dev/null 2>&1
+  git clone "$REPO_URL" > /dev/null 2>&1
   cd icow-light
   echo "Repo cloned: ✅ "
 }
@@ -41,8 +41,8 @@ install_client() {
   echo ""
   echo "Installing client..."
   echo ""
-  pushd src/litecow_client > /dev/null 2>&1
-  poetry install
+  pushd sandbox > /dev/null 2>&1
+  pip install -r requirements.txt
   popd > /dev/null 2>&1
   echo "Client installed: ✅ "
 }
@@ -53,8 +53,7 @@ intro_message() {
   echo ""
   echo "Run your first litecow command"
   echo ""
-  echo "litecow import --onnx-model-zoo tinyyolov2"
-  echo "litecow run --model tinyyolov2 --file image.png"
+  echo "litecow import-model --source https://github.com/onnx/models/blob/master/vision/object_detection_segmentation/tiny-yolov3/model/tiny-yolov3-11.onnx tinyyolov3"
 
 
 }

@@ -17,7 +17,7 @@ make sandbox
 
 This will setup a kind cluster with knative and the ICOW service installed as well as a minio server.
 
-From here, you can use the ICOW client to hit ICOW at [http://localhost:31080](http://localhost:31080)
+From here, you can use the ICOW client to hit ICOW at [icow-service.icow.127.0.0.1.nip.io:80](icow-service.icow.127.0.0.1.nip.io:80)
 and access Minio at [http://localhost:9000](http://localhost:9000)
 
 
@@ -33,5 +33,11 @@ and access Minio at [http://localhost:9000](http://localhost:9000)
 Import your first model from the [ONNX Model Zoo](https://github.com/onnx/models)
 
 ```
-litecow import-model --sourcehttps://github.com/onnx/models/blob/master/vision/object_detection_segmentation/tiny-yolov3/model/tiny-yolov3-11.onnx tinyyolov3
+litecow import-model --source https://github.com/onnx/models/blob/master/vision/object_detection_segmentation/tiny-yolov3/model/tiny-yolov3-11.onnx tinyyolov3
+```
+
+## Object Detection
+Run the sandbox python file to use the tinyyolov3 model that you just imported
+```
+python sandbox/sandbox.py
 ```

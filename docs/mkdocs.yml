@@ -10,12 +10,6 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Overview: overview.md
-  - Getting Started:
-    - Sandbox: sandbox.md
-    - Installation: install.md
-    - ICOW Models: models.md
-    - ICOW Python Client: pycow.md
 
 theme:
   name: material

@@ -72,23 +72,11 @@ EOF
 
 kubectl apply -f kourier-patch.yaml
 
-cat > service.yaml <<EOF
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: helloworld-go # The name of the app
-  namespace: default # The namespace the app will use
-spec:
-  template:
-    spec:
-      containers:
-        - image: gcr.io/knative-samples/helloworld-go # The URL to the image of the app
-          env:
-            - name: TARGET # The environment variable printed out by the sample app
-              value: "Hello Knative Serving is up and running with Kourier!!"
-EOF
-
-
-echo "Setup complete 🎉"
+echo ""
+echo ""
+echo ""
+echo "🎉Setup complete 🎉"
+echo ""
+echo ""
 #Keep container alive indefinitely
 tail -f /dev/null

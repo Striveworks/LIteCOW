@@ -7,14 +7,18 @@ ICOW requires an S3 Instance with versioning enabled. We have a cli command that
 
 To use the CLI please see the below steps.
 
-1. Install `litecow_models`.
+1. Install `litecow_models`
+
+    ```
+    pip install litecow-models
+    ```
 
 2. Set S3 configuration parameters in the environment including the following.
 
     ```
-    AWS_ACCESS_KEY=<Access key for your s3>
-    AWS_SECRET_KEY=<Secret key for your s3>
-    S3ENDPOINT_URL=<Endpoint for your s3 instance>
+    S3_ACCESS_KEY=<Access key for your s3>
+    S3_SECRET_KEY=<Secret key for your s3>
+    S3_URL=<Endpoint for your s3 instance>
     ```
 
 2. Use the `litecow enable-versioning` cli command to initialize a new bucket in the configured S3 instance, passing in the name for an existing bucket that will have versioning enabled, or for a new bucket to be created.
@@ -121,7 +125,11 @@ This guide assumes you already have an S3 bucket setup (AWS, Minio, etc.) with v
 
 This guide assumes you already have serialized ONNX models that you would like to use with ICOW.
 
-1. Install `litecow_models`.
+1. Install `litecow_models`
+
+   ```
+   pip install litecow-models
+   ```
 
 2. Upload a model
   ```
