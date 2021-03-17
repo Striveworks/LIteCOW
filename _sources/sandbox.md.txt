@@ -4,7 +4,7 @@ This sandbox tutorial is setup to make getting started with ICOW quickly
 
 ## Install
 ```
-# curl -s https://raw.githubusercontent.com/Striveworks/LIteCOW/main/sandbox/setup.sh?token=AD5TAFY32MHFIQ2B6LVNQFTAKJQIQ | bash
+curl -s https://raw.githubusercontent.com/Striveworks/LIteCOW/main/sandbox/setup.sh | bash
 
 ```
 or
