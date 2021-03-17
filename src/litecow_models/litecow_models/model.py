@@ -18,8 +18,8 @@ class ModelLoader:
     def import_model(source: str, model_bucket: str, model_name: str, model_version: str) -> None:
         """Import model into model registry
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         source: str
             Source URL of model
         model_bucket: str
@@ -55,11 +55,11 @@ class ModelLoader:
     def export_model(model_bucket: str, model_name: str) -> None:
         """Export model from model registry
 
-        Parameters:
-        -----------
-        model_bucket: str
+        Parameters
+        ----------
+        model_bucket : str
             Model registry bucket name
-        model_name: str
+        model_name : str
             Name of model
         """
         client = create_s3_client()
@@ -210,8 +210,8 @@ def pytorch_to_onnx_file(
 def convert_github_raw(scheme: str, netloc: str, path: str) -> str:
     """Convert github blob URL to raw content URL
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     scheme: str
         URL scheme
     netloc: str
@@ -238,13 +238,13 @@ def create_s3_client() -> botocore.client:
 def download_file(url: str) -> str:
     """Convert github blob URL to raw content URL
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     url: str
         Source URL of download
 
-    Returns:
-    --------
+    Returns
+    -------
     local_filename: str
         Local filename of downloaded file
     """

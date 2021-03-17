@@ -24,8 +24,8 @@ class ICOWServicer(ICOWServicer):
     ):
         """Initializes ICOWService
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         batch_hint: int
             Size to start batches at. Automatically reduced when overflow occurs.
         aws_access_key: string
@@ -46,15 +46,15 @@ class ICOWServicer(ICOWServicer):
     def get_inference(self, request, context):
         """Handles requests for service get_inference calls.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         request: litecow_common.litecow_pb2.InferenceRequest
             The InferenceRequest to answer.
         context: grpc.ServicerContext
             The context for this request
 
-        Returns:
-        --------
+        Returns
+        -------
         Union[litecow_common.litecow_pb2.NamedArrays, litecow_common.litecow_pb2.ArrayList]
             Outputs of inference encoded as a NamedArrays
         """
@@ -99,8 +99,8 @@ class ICOWServicer(ICOWServicer):
     ) -> InferenceSession:
         """Retrieves a model version from s3
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         s3_path: str
             s3 object key for model to load should use s3 scheme like
             s3://models/facenet.onnx
@@ -108,8 +108,8 @@ class ICOWServicer(ICOWServicer):
             The optional version of the model to load
             empty is treated like None.
 
-        Returns:
-        --------
+        Returns
+        -------
         onnxruntime.InferenceSession:
             The requested model loaded into an inference session
         """
@@ -168,7 +168,7 @@ def serve(
 ) -> None:
     """Run the ICOWServicer with arguments passed.
 
-    Parameter:
+    Parameters
     ----------
     workers: int
         The number of max workers for the ThreadPoolExecutor running the server.

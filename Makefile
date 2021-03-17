@@ -23,5 +23,6 @@ litecow_server:
 litecow_server_gpu:
 	sudo docker build -t litecow_server:gpu -f docker/gpu-server/Dockerfile src
 
-dev-docs :
-	docker run --rm -it --network=host -v ${PWD}:/icow-light --workdir /icow-light --entrypoint bash --name litecow-docs polinux/mkdocs scripts/mkdocs_startup.sh
+.PHONY: docs
+docs:
+	sudo docker build -t docs -f docker/docs/Dockerfile .

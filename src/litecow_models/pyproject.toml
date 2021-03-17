@@ -2,7 +2,7 @@
 name = "litecow_models"
 version = "0.1.0"
 description = ""
-authors = ["Julian Medina <jmedina@striveworks.us>"]
+authors = ["Striveworks"]
 
 [tool.poetry.dependencies]
 python = ">=3.6.2,<4"

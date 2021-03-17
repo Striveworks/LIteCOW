@@ -3,7 +3,7 @@ site_description: 'Release and use ML Models seemlessly'
 repo_name: 'chariot/icow-light'
 repo_url: 'https://gitlab.striveworks.us/chariot/icow'
 copyright: 'Copyright &copy; 2021 Striveworks'
-docs_dir: 'docs/content'
+docs_dir: 'content'
 extra_css:
   - extra.css
 
@@ -19,11 +19,12 @@ nav:
 
 theme:
   name: material
-  custom_dir: docs/content/overrides
+  custom_dir: content/overrides
   palette:
     primary: white
   icon:
     logo: material/console-line
+    repo: fontawesome/brands/github
   favicon: images/favicon.ico
   features:
     - navigation.instant
