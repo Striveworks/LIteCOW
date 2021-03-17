@@ -1,4 +1,0 @@
-litecow==0.1.0
-litecow-models==0.1.0
-matplotlib==3.3.4
-Pillow==7.2.0

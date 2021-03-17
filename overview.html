@@ -1,0 +1,249 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ICOW Service Install" href="install.html" /><link rel="prev" title="Inference with Collected ONNX Weights" href="index.html" />
+
+    <meta name="generator" content="sphinx-3.5.2, furo 2021.02.28.beta28"/>
+        <title>Overview - litecow 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=be5985a4059b5c2cd56ed0804790452beca62674">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">litecow 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">ICOW Service Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">ICOW Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_usage.html">Client Usage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="litecow_modules.html">litecow API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="litecow/modules.html">litecow</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="litecow/litecow.html">litecow package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="litecow/litecow.common.html">litecow.common package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="models/modules.html">litecow_models</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="models/litecow_models.html">litecow_models package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p><strong>ICOW</strong> and its free open source version <strong>lIteCOW</strong> provide the ability to quickly deploy and remotely call versioned machine learning models.</p>
+<p>Inference with Collected ONNX Weights or Inference COW/ICOW for short, is a project to provide the inference functionality of machine learning models without requiring the resources or dependencies to run such models locally. In addition to the ICOW project, the <strong>lIteCOW</strong> project provides a subset of ICOW inference features to the open source community for free.  These projects aim to provide these capabilities while adding as few dependencies as possible to the caller of the model and requiring minimal compute resources. Additionally these projects aim to remain small themselves so they primarily focus on providing remote use of machine learning models; features that add improvements to the way models are run, likely belong in upstream projects where they may benefit all users of the upstream project including ICOW and lIteCOW.</p>
+<div class="section" id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<p><img alt="" src="_images/icow-diagram.png"/></p>
+</div>
+<div class="section" id="why-create-use-inference-cow">
+<h2>Why create/use inference COW<a class="headerlink" href="#why-create-use-inference-cow" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="overcome-limitations-of-gpu-resources-when-creating-deploying-microservices">
+<h3>Overcome limitations of (GPU) resources when creating/deploying microservices<a class="headerlink" href="#overcome-limitations-of-gpu-resources-when-creating-deploying-microservices" title="Permalink to this headline">¶</a></h3>
+<p>When creating a microservice which relies on machine learning model(s) and deploying it through a container orchestration tool such as kubernetes there are limitations on where/how such a microservice can run. If the microservice is allowed to run on any node in the kubernetes cluster the microservice may not be run on a node with a gpu and while it will be easier to scale, it may be overall slower since allowing the microservice to deploy on any node in kubernetes prevents the microservice from using any accelerators. If the microservice is restricted to only nodes with the appropriate gpus then the microservice will have access to a gpu for acceleration however even when not in use the microservice will have full use of the gpu and no other services will be allowed to use that gpu. This makes scaling multiple microservices that require gpus within the same cluster difficult as they will compete for resources even when they are sitting idle. To overcome this issue the actual inference work that microservices need a gpu to accelerate can be extracted and performed in a single microservice which is shared among the cluster. With the inference work extracted to ICOW/lIteCOW the microservices that rely on machine learning models will be able to freely scale on any node without worrying about access to a gpu and when those microservices are sitting idle the ICOW/lIteCOW microservice will still be available to any other microservice that needs it.</p>
+</div>
+<div class="section" id="provide-a-language-independent-way-of-accessing-machine-learning-inference-capabilities">
+<h3>Provide a language independent way of accessing machine learning inference capabilities<a class="headerlink" href="#provide-a-language-independent-way-of-accessing-machine-learning-inference-capabilities" title="Permalink to this headline">¶</a></h3>
+<p>To access machine learning inference capabilities often python is the first choice since that’s where the models were trained. However, its not only python developers that would like to incorporate machine learning inference into their applications and sometimes python isn’t well suited to the task at hand. To tackle this issue it would be nice to have a language independent definition of communication with machine learning models. While ICOW/lIteCOW implement their servers in python and provide reference client implementations in python, they define their services and requests with an Interface Definition Language protobuf and communicate to clients through the common protocol gRPC for remote procedure calls. If another client implementation becomes required the protobuf file which describes the communication can be used to generate a client in any language supported by the Protocol Compiler protoc.</p>
+</div>
+<div class="section" id="provide-the-ability-to-remotely-access-and-use-inference-models-as-services-with-acceleration">
+<h3>Provide the ability to remotely access and use inference models as services with acceleration<a class="headerlink" href="#provide-the-ability-to-remotely-access-and-use-inference-models-as-services-with-acceleration" title="Permalink to this headline">¶</a></h3>
+<p>To make use of many machine learning models currently requires the direct import and use of the machine learning libraries used to train them. While this isn’t always a problem, it requires installing machine learning libraries locally, which can add a lot to the size of a microservice deployment. This also means projects that would like to utilize inference capabilities must depend on these machine learning libraries even for a single inference call. Additionally if the project calls for accelerated inference then the local machine would need to have a gpu available for acceleration. ICOW/lIteCOW provide the use of inference models remotely potentially with gpu acceleration while only requiring that a client follow the protocol, so a machine learning library won’t be needed to call inference, and if the remote has a gpu then all the callers will benefit.</p>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="install.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">ICOW Service Install</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Striveworks
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/overview.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
+<li><a class="reference internal" href="#why-create-use-inference-cow">Why create/use inference COW</a><ul>
+<li><a class="reference internal" href="#overcome-limitations-of-gpu-resources-when-creating-deploying-microservices">Overcome limitations of (GPU) resources when creating/deploying microservices</a></li>
+<li><a class="reference internal" href="#provide-a-language-independent-way-of-accessing-machine-learning-inference-capabilities">Provide a language independent way of accessing machine learning inference capabilities</a></li>
+<li><a class="reference internal" href="#provide-the-ability-to-remotely-access-and-use-inference-models-as-services-with-acceleration">Provide the ability to remotely access and use inference models as services with acceleration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

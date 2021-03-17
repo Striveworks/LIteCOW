@@ -1,0 +1,29 @@
+litecow\_models package
+=======================
+
+Submodules
+----------
+
+litecow\_models.cli module
+--------------------------
+
+.. automodule:: litecow_models.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+litecow\_models.model module
+----------------------------
+
+.. automodule:: litecow_models.model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: litecow_models
+   :members:
+   :undoc-members:
+   :show-inheritance:
