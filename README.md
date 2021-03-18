@@ -1,6 +1,9 @@
 <br />
 <p align="center">
 
+  <img src="docs/source/_static/icow_final.svg" alt="" draggable="false">
+
+
   <h3 align="center">Inference with Collected ONNX Weights</h3>
 
   <p align="center">
