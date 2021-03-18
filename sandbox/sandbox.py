@@ -1,10 +1,14 @@
 import grpc
+from argparse import ArgumentParser
+
 from litecow.client import ICOWClient
 
 import numpy as np
 from matplotlib import pyplot
 from matplotlib.patches import Rectangle
 from PIL import Image
+import requests
+from io import BytesIO
 
 
 class BoundBox:
@@ -107,27 +111,32 @@ def draw_boxes(filename, v_boxes, v_labels, v_scores):
 
 
 def main():
-    img_path = './cow.jpeg'
+	parser = ArgumentParser()
+	parser.add_argument("image", type=str, help="URL to image")
+	args = parser.parse_args()
+	img_path = args.image
 
-    image = Image.open(img_path)
-    # input
-    image_data = preprocess(image)
-    image_size = np.array([image.size[1], image.size[0]]).reshape(1, 2)
+	response = requests.get(img_path)
 
-    channel = grpc.insecure_channel("icow-service.icow.127.0.0.1.nip.io:80")
-    client = ICOWClient(channel)
+	image = Image.open(BytesIO(response.content))
+	# input
+	image_data = preprocess(image)
+	image_size = np.array([image.size[1], image.size[0]]).reshape(1, 2)
 
-    feed_f = dict(zip(['input_1', 'image_shape'],(image_data, np.float32(np.array([image.size[1], image.size[0]]).reshape(1, 2)))))
-    results = client.get_inference("s3://models/tinyyolov3", feed_f)
+	channel = grpc.insecure_channel("icow-service.icow.127.0.0.1.nip.io:80")
+	client = ICOWClient(channel)
 
-    boxes, scores, indices = results['yolonms_layer_1'], results['yolonms_layer_1:1'], results['yolonms_layer_1:2']
-    out_boxes, out_scores, out_classes = postprocess(indices, scores, boxes)
-    v_boxes, v_labels, v_scores = get_boxes(out_boxes, out_scores, out_classes)
+	feed_f = dict(zip(['input_1', 'image_shape'],(image_data, np.float32(np.array([image.size[1], image.size[0]]).reshape(1, 2)))))
+	results = client.get_inference("s3://models/tinyyolov3", feed_f)
 
-    for i in range(len(v_boxes)):
-        print(v_labels[i], v_scores[i])
+	boxes, scores, indices = results['yolonms_layer_1'], results['yolonms_layer_1:1'], results['yolonms_layer_1:2']
+	out_boxes, out_scores, out_classes = postprocess(indices, scores, boxes)
+	v_boxes, v_labels, v_scores = get_boxes(out_boxes, out_scores, out_classes)
 
-    draw_boxes(img_path, v_boxes, v_labels, v_scores)
+	for i in range(len(v_boxes)):
+	    print(v_labels[i], v_scores[i])
+
+	draw_boxes(img_path, v_boxes, v_labels, v_scores)
 
 
 if __name__ == '__main__':

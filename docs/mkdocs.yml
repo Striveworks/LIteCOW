@@ -1,7 +1,7 @@
 site_name: ICOW
 site_description: 'Release and use ML Models seemlessly'
-repo_name: 'chariot/icow-light'
-repo_url: 'https://gitlab.striveworks.us/chariot/icow'
+repo_name: 'Striveworks/LIteCOW'
+repo_url: 'https://github.com/Striveworks/LIteCOW'
 copyright: 'Copyright &copy; 2021 Striveworks'
 docs_dir: 'content'
 extra_css:

@@ -37,5 +37,5 @@ litecow import-model --source https://github.com/onnx/models/blob/master/vision/
 ## Object Detection
 Run the sandbox python file to use the tinyyolov3 model that you just imported
 ```
-python sandbox/sandbox.py
+curl -s https://raw.githubusercontent.com/Striveworks/LIteCOW/main/sandbox/sandbox.py | python - https://github.com/Striveworks/LIteCOW/raw/main/sandbox/cow.jpeg
 ```
