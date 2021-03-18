@@ -6,7 +6,7 @@
   <p align="center">
     Easily deploy inference models to dev, test, and production at scale
     <br />
-    <a href=""><strong>Explore the docs »</strong></a>
+    <a href="https://striveworks.github.io/LIteCOW/index.html"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href=https://github.com/Striveworks/LIteCOW/issues">Report Bug</a>
@@ -45,7 +45,7 @@ litecow import-model --source https://github.com/onnx/models/blob/master/vision/
 
 Run the example object de
 ```
-cd sandbox && python sandbox.py
+curl -s https://raw.githubusercontent.com/Striveworks/LIteCOW/main/sandbox/sandbox.py | python - https://github.com/Striveworks/LIteCOW/raw/main/sandbox/cow.jpeg
 ```
 
 

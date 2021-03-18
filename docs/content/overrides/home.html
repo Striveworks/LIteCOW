@@ -107,7 +107,7 @@
   }
 
   .pricing-plan:first-child:before {
-    background-image: linear-gradient(90deg, #4051b5  0%, #4051b5 100%);
+    background-image: linear-gradient(90deg, #4051b5 0%, #4051b5 100%);
   }
 
   .pricing-plan:nth-child(2) .pricing-plan__price {
@@ -177,15 +177,37 @@
     color: #656d78;
   }
 
-  li {list-style-type: none;}
+  li {
+    list-style-type: none;
+  }
+
+
+  .svg {
+    height: 500px;
+    width: 500px;
+    z-index: -100;
+    left: 70vw;
+    top: -3vw;
+    position: absolute;
+
+  }
+
+  .tx-hero {
+    z-index: 100;
+  }
 </style>
 
 <!-- Hero for landing page -->
 <br><br><br>
+  <div class="svg">
+    <object data="_static/icow_final.svg" type="image/svg+xml">
+    </object>
+  </div>
+<br>
 <div class="md-container tx-hero">
   <div class="md-grid md-typeset">
     <div class="md-main__inner">
-      <div>
+      <div class="title-text">
         <h1>Inference with Collected ONNX Weights</h1>
         <p>Easily deploy inference models to dev, test, and production at scale
         </p>
@@ -200,13 +222,10 @@
   </div>
 </div>
 
+
 <div class="md-container">
   <div class="tx-hero__image">
-    <img
-      src="_static/icow.gif"
-      alt=""
-      draggable="false"
-    >
+    <img src="_static/icow.gif" alt="" draggable="false">
   </div>
 </div>
 
