@@ -96,8 +96,9 @@ def get_boxes(out_boxes, out_scores, out_classes):
 
 # draw all results
 def draw_boxes(filename, v_boxes, v_labels, v_scores):
-	data = pyplot.imread(filename)
-	pyplot.imshow(data)
+	response = requests.get(filename)
+	image = Image.open(BytesIO(response.content))
+	pyplot.imshow(image)
 	ax = pyplot.gca()
 	for i in range(len(v_boxes)):
 		box = v_boxes[i]
