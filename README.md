@@ -1,7 +1,7 @@
 <br />
 <p align="center">
 
-  <img style="height: 100px; width: 100px;" src="docs/source/_static/icow_final.svg" alt="" draggable="false">
+  <img src="docs/source/_static/icow_final.svg" alt="" draggable="false" width="300" height="300">
 
 
   <h3 align="center">Inference with Collected ONNX Weights</h3>
