@@ -7,6 +7,6 @@ See [Installing Helm](https://helm.sh/docs/intro/install/) for instructions on i
 
 ```
 git clone git@github.com:Striveworks/LIteCOW.git
-cd icow-light
+cd LIteCOW
 helm install -n icow --create-namespace icow .
 ```
