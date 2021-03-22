@@ -10,3 +10,7 @@ git clone git@github.com:Striveworks/LIteCOW.git
 cd LIteCOW
 helm install -n icow --create-namespace icow .
 ```
+
+### Enable GPU support
+
+The helm chart can be used to install LIteCOW with gpu support enable as well. To enable this feature make the changes suggested in the comments of the values.yaml file.

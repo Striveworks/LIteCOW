@@ -5,7 +5,7 @@
 image:
   repository: dev.local/icow_service
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "latest" # replace with "gpu" if using gpu inference
 
 s3:
   access_key: "minioadmin"
@@ -14,6 +14,12 @@ s3:
 
 annotations: []
 
+resources: {}
+# replace {} with below to enable gpu support
+#  limits:
+#    nvidia.com/gpu: 1
+#  requests:
+#    nvidia.com/gpu: 1
 
 minio:
   mode: distributed
