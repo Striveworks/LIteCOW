@@ -18,9 +18,15 @@ spec:
           name: h2c
         env:
         - name: AWS_ACCESS_KEY
-          value: {{ .Values.s3.access_key }}
+          valueFrom:
+            secretKeyRef:
+              name: icow-s3-access
+              key: accesskey
         - name: AWS_SECRET_KEY
-          value: {{ .Values.s3.secret_key }}
+          valueFrom:
+            secretKeyRef:
+              name: icow-s3-access
+              key: secretkey
         - name: S3ENDPOINT_URL
           value: {{ .Values.s3.endpoint }}
         {{- if .Values.resources }}
