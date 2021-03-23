@@ -8,7 +8,7 @@ clone_repo() {
   echo ""
   echo "Cloning repo..."
   git clone "$REPO_URL" > /dev/null 2>&1
-  cd icow-light
+  cd LIteCOW
   echo "Repo cloned: ✅ "
 }
 
