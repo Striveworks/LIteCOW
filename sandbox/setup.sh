@@ -2,7 +2,7 @@
 
 set -e
 
-REPO_URL="git@nacho.striveworks.us:chariot/icow-light.git"
+REPO_URL="git@github.com:Striveworks/LIteCOW.git"
 
 clone_repo() {
   echo ""
