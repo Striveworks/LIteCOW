@@ -50,5 +50,5 @@ knative-serving:
     hpa:
       enabled: false
 
-  dns:
-    enabled: false
+    dns:
+      enabled: false

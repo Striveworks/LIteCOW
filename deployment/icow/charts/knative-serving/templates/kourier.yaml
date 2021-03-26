@@ -19,7 +19,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
-
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 ---
 # Copyright 2020 The Knative Authors
 #
@@ -43,6 +45,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 data:
   envoy-bootstrap.yaml: |
     dynamic_resources:
@@ -143,6 +148,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -152,6 +160,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 rules:
   - apiGroups: [""]
     resources: ["events"]
@@ -179,6 +190,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -211,6 +225,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 spec:
   replicas: 1
   selector:
@@ -259,6 +276,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 spec:
   ports:
     - name: grpc-xds
@@ -292,6 +312,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 spec:
   selector:
     matchLabels:
@@ -360,6 +383,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
 {{- with .Values.kourier.service.annotations }}
   annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
@@ -385,6 +410,9 @@ metadata:
   labels:
     networking.knative.dev/ingress-provider: kourier
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 spec:
   ports:
     - name: http2
