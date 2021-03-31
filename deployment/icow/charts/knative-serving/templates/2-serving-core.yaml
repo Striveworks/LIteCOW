@@ -18,7 +18,9 @@ metadata:
   name: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
-
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-5"
 ---
 # Copyright 2019 The Knative Authors
 #
@@ -42,6 +44,9 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
     # Labeled to facilitate aggregated cluster roles that act on Addressables.
     duck.knative.dev/addressable: "true"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 # Do not use this role directly. These rules will be added to the "addressable-resolver" role.
 rules:
   - apiGroups:
@@ -78,6 +83,9 @@ metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 rules:
   - apiGroups: ["serving.knative.dev"]
     resources: ["*"]
@@ -93,6 +101,9 @@ metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 rules:
   - apiGroups: ["serving.knative.dev"]
     resources: ["*"]
@@ -108,6 +119,9 @@ metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 rules:
   - apiGroups: ["serving.knative.dev", "networking.internal.knative.dev", "autoscaling.internal.knative.dev", "caching.internal.knative.dev"]
     resources: ["*"]
@@ -135,6 +149,9 @@ metadata:
   labels:
     serving.knative.dev/release: "v0.21.0"
     serving.knative.dev/controller: "true"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 rules:
   - apiGroups: [""]
     resources: ["pods", "namespaces", "secrets", "configmaps", "endpoints", "services", "events", "serviceaccounts"]
@@ -187,6 +204,9 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
     # Labeled to facilitate aggregated cluster roles that act on PodSpecables.
     duck.knative.dev/podspecable: "true"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 # Do not use this role directly. These rules will be added to the "podspecable-binder" role.
 rules:
   - apiGroups:
@@ -221,6 +241,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -228,6 +251,9 @@ metadata:
   name: knative-serving-admin
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -240,6 +266,9 @@ metadata:
   name: knative-serving-controller-admin
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 subjects:
   - kind: ServiceAccount
     name: controller
@@ -248,680 +277,6 @@ roleRef:
   kind: ClusterRole
   name: knative-serving-admin
   apiGroup: rbac.authorization.k8s.io
-
----
-# Copyright 2018 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: images.caching.internal.knative.dev
-  labels:
-    knative.dev/crd-install: "true"
-spec:
-  group: caching.internal.knative.dev
-  names:
-    kind: Image
-    plural: images
-    singular: image
-    categories:
-      - knative-internal
-      - caching
-    shortNames:
-      - img
-  scope: Namespaced
-  versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: Image
-          type: string
-          jsonPath: .spec.image
-
----
-# Copyright 2020 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: certificates.networking.internal.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-spec:
-  group: networking.internal.knative.dev
-  versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type==\"Ready\")].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type==\"Ready\")].reason"
-  names:
-    kind: Certificate
-    plural: certificates
-    singular: certificate
-    categories:
-      - knative-internal
-      - networking
-    shortNames:
-      - kcert
-  scope: Namespaced
-
----
-# Copyright 2019 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: configurations.serving.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-    duck.knative.dev/podspecable: "true"
-spec:
-  group: serving.knative.dev
-  versions:
-    - name: v1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: LatestCreated
-          type: string
-          jsonPath: .status.latestCreatedRevisionName
-        - name: LatestReady
-          type: string
-          jsonPath: .status.latestReadyRevisionName
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: Configuration
-    plural: configurations
-    singular: configuration
-    categories:
-      - all
-      - knative
-      - serving
-    shortNames:
-      - config
-      - cfg
-  scope: Namespaced
-
----
-# Copyright 2020 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: ingresses.networking.internal.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-spec:
-  group: networking.internal.knative.dev
-  versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: Ingress
-    plural: ingresses
-    singular: ingress
-    categories:
-      - knative-internal
-      - networking
-    shortNames:
-      - kingress
-      - king
-  scope: Namespaced
-
----
-# Copyright 2019 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: metrics.autoscaling.internal.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-spec:
-  group: autoscaling.internal.knative.dev
-  versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: Metric
-    plural: metrics
-    singular: metric
-    categories:
-      - knative-internal
-      - autoscaling
-  scope: Namespaced
-
----
-# Copyright 2018 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: podautoscalers.autoscaling.internal.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-spec:
-  group: autoscaling.internal.knative.dev
-  versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: DesiredScale
-          type: integer
-          jsonPath: ".status.desiredScale"
-        - name: ActualScale
-          type: integer
-          jsonPath: ".status.actualScale"
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: PodAutoscaler
-    plural: podautoscalers
-    singular: podautoscaler
-    categories:
-      - knative-internal
-      - autoscaling
-    shortNames:
-      - kpa
-      - pa
-  scope: Namespaced
-
----
-# Copyright 2019 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: revisions.serving.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-spec:
-  group: serving.knative.dev
-  versions:
-    - name: v1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: Config Name
-          type: string
-          jsonPath: ".metadata.labels['serving\\.knative\\.dev/configuration']"
-        - name: K8s Service Name
-          type: string
-          jsonPath: ".status.serviceName"
-        - name: Generation
-          type: string # int in string form :(
-          jsonPath: ".metadata.labels['serving\\.knative\\.dev/configurationGeneration']"
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: Revision
-    plural: revisions
-    singular: revision
-    categories:
-      - all
-      - knative
-      - serving
-    shortNames:
-      - rev
-  scope: Namespaced
-
----
-# Copyright 2019 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: routes.serving.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-    duck.knative.dev/addressable: "true"
-spec:
-  group: serving.knative.dev
-  versions:
-    - name: v1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: URL
-          type: string
-          jsonPath: .status.url
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: Route
-    plural: routes
-    singular: route
-    categories:
-      - all
-      - knative
-      - serving
-    shortNames:
-      - rt
-  scope: Namespaced
-
----
-# Copyright 2019 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: serverlessservices.networking.internal.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-spec:
-  group: networking.internal.knative.dev
-  versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flush out the
-          # schema for each version at this time
-          #
-          # see issue: https://github.com/knative/serving/issues/912
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: Mode
-          type: string
-          jsonPath: ".spec.mode"
-        - name: Activators
-          type: integer
-          jsonPath: ".spec.numActivators"
-        - name: ServiceName
-          type: string
-          jsonPath: ".status.serviceName"
-        - name: PrivateServiceName
-          type: string
-          jsonPath: ".status.privateServiceName"
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: ServerlessService
-    plural: serverlessservices
-    singular: serverlessservice
-    categories:
-      - knative-internal
-      - networking
-    shortNames:
-      - sks
-  scope: Namespaced
-
----
-# Copyright 2019 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: services.serving.knative.dev
-  labels:
-    serving.knative.dev/release: "v0.21.0"
-    knative.dev/crd-install: "true"
-    duck.knative.dev/addressable: "true"
-    duck.knative.dev/podspecable: "true"
-spec:
-  group: serving.knative.dev
-  versions:
-    - name: v1
-      served: true
-      storage: true
-      subresources:
-        status: {}
-      schema:
-        openAPIV3Schema:
-          type: object
-          x-kubernetes-preserve-unknown-fields: true
-          properties:
-            spec:
-              type: object
-              x-kubernetes-preserve-unknown-fields: true
-              properties:
-                template:
-                  type: object
-                  x-kubernetes-preserve-unknown-fields: true
-                  description: |
-                    A template for the current desired application state.
-                    Changes to `template` will cause a new Revision to be created as
-                    defined in the lifecycle section. The contents of the Service's
-                    RevisionTemplateSpec is used to create a corresponding Configuration.
-                traffic:
-                  x-kubernetes-preserve-unknown-fields: true
-                  type: array
-                  description: |
-                    Traffic specifies how to distribute traffic over a
-                    collection of Revisions belonging to the Service. If traffic is
-                    empty or not provided, defaults to 100% traffic to the latest
-                    `Ready` Revision. The contents of the Service's TrafficTarget is
-                    used to create a corresponding Route.
-                  items:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                    properties:
-                      revisionName:
-                        type: string
-                        description: |
-                          A specific revision to which to send this portion
-                          of traffic.
-                          This is mutually exclusive with configurationName.
-                      configurationName:
-                        type: string
-                        description: |
-                          ConfigurationName of a configuration to whose latest revision we will send
-                          this portion of traffic. When the "status.latestReadyRevisionName" of the
-                          referenced configuration changes, we will automatically migrate traffic
-                          from the prior "latest ready" revision to the new one.  This field is never
-                          set in Route's status, only its spec.
-                          This is mutually exclusive with RevisionName.
-                      latestRevision:
-                        type: boolean
-                        description: |
-                          `latestRevision` may be optionally provided to indicate
-                          that the latest ready Revision of the Configuration should be used
-                          for this traffic target. When provided latestRevision MUST be true
-                          if revisionName is empty, and it MUST be false when revisionName is non-empty.
-                      tag:
-                        type: string
-                        description: |
-                          Tag is optionally used to expose a dedicated URL for
-                          referencing this target exclusively. The dedicated URL MUST include
-                          in it the string provided by tag.
-                      percent:
-                        type: integer
-                        description: |
-                          The percentage of requests which should be allocated
-                          from the main Route domain name to the specified `revisionName` or
-                          `configurationName`.
-                          All `percent` values in `traffic` MUST sum to 100.
-                        minimum: 0
-                        maximum: 100
-            status:
-              type: object
-              x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: URL
-          type: string
-          jsonPath: .status.url
-        - name: LatestCreated
-          type: string
-          jsonPath: .status.latestCreatedRevisionName
-        - name: LatestReady
-          type: string
-          jsonPath: .status.latestReadyRevisionName
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-  names:
-    kind: Service
-    plural: services
-    singular: service
-    categories:
-      - all
-      - knative
-      - serving
-    shortNames:
-      - kservice
-      - ksvc
-  scope: Namespaced
-
 ---
 # Copyright 2018 The Knative Authors
 #
@@ -944,6 +299,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-3"
 spec:
   # This is the Go import path for the binary that is containerized
   # and substituted here.
@@ -973,6 +331,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "604cb513"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -1178,6 +538,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "cdabec96"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -1251,7 +613,7 @@ data:
     # container name, if none is specified.  This field supports
     # Go templating and is supplied with the ObjectMeta of the
     # enclosing Service or Configuration, so values such as
-    # {{.Name}} are also valid.
+    # {{`{{.Name}}`}} are also valid.
     container-name-template: "user-container"
 
     # container-concurrency specifies the maximum number
@@ -1312,6 +674,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "fa67b403"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   # This is the Go import path for the binary that is containerized
   # and substituted here.
@@ -1393,6 +757,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "74c3fc6a"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -1456,6 +822,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "4437b773"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -1587,6 +955,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "e6149382"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -1685,6 +1055,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "96896b00"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -1745,6 +1117,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "d9570453"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -1823,6 +1197,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "14cd8fa3"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   "ingress.class": "kourier.ingress.networking.knative.dev"
   _example: |
@@ -1865,7 +1241,7 @@ data:
 
     # domainTemplate specifies the golang text template string to use
     # when constructing the Knative service's DNS name. The default
-    # value is "{{.Name}}.{{.Namespace}}.{{.Domain}}".
+    # value is {{`"{{.Name}}.{{.Namespace}}.{{.Domain}}"`}}.
     #
     # Valid variables defined in the template include Name, Namespace, Domain,
     # Labels, and Annotations. Name will be the result of the tagTemplate
@@ -1875,24 +1251,24 @@ data:
     # the domain name generated is problematic for wildcard certificates
     # that only support a single level of domain name added to the
     # certificate's domain. In those cases you might consider using a value
-    # of "{{.Name}}-{{.Namespace}}.{{.Domain}}", or removing the Namespace
+    # of {{`"{{.Name}}-{{.Namespace}}.{{.Domain}}"`}}, or removing the Namespace
     # entirely from the template. When choosing a new value be thoughtful
     # of the potential for conflicts - for example, when users choose to use
     # characters such as `-` in their service, or namespace, names.
-    # {{.Annotations}} or {{.Labels}} can be used for any customization in the
+    # {{`{{.Annotations}}`}} or {{`{{.Labels}}`}} can be used for any customization in the
     # go template if needed.
     # We strongly recommend keeping namespace part of the template to avoid
     # domain name clashes:
-    # eg. '{{.Name}}-{{.Namespace}}.{{ index .Annotations "sub"}}.{{.Domain}}'
+    # eg. {{`'{{.Name}}-{{.Namespace}}.{{ index .Annotations "sub"}}.{{.Domain}}'`}}
     # and you have an annotation {"sub":"foo"}, then the generated template
     # would be {Name}-{Namespace}.foo.{Domain}
-    domainTemplate: "{{.Name}}.{{.Namespace}}.{{.Domain}}"
+    domainTemplate: {{`"{{.Name}}.{{.Namespace}}.{{.Domain}}"`}}
 
     # tagTemplate specifies the golang text template string to use
     # when constructing the DNS name for "tags" within the traffic blocks
     # of Routes and Configuration.  This is used in conjunction with the
     # domainTemplate above to determine the full URL for the tag.
-    tagTemplate: "{{.Tag}}-{{.Name}}"
+    tagTemplate: {{`"{{.Tag}}-{{.Name}}"`}}
 
     # Controls whether TLS certificates are automatically provisioned and
     # installed in the Knative ingress to terminate external TLS connection.
@@ -1947,6 +1323,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "97c1d10b"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -2004,7 +1382,7 @@ data:
     #   PodIP         string  // IP of the pod hosting the revision
     # }
     #
-    logging.request-log-template: '{"httpRequest": {"requestMethod": "{{.Request.Method}}", "requestUrl": "{{js .Request.RequestURI}}", "requestSize": "{{.Request.ContentLength}}", "status": {{.Response.Code}}, "responseSize": "{{.Response.Size}}", "userAgent": "{{js .Request.UserAgent}}", "remoteIp": "{{js .Request.RemoteAddr}}", "serverIp": "{{.Revision.PodIP}}", "referer": "{{js .Request.Referer}}", "latency": "{{.Response.Latency}}s", "protocol": "{{.Request.Proto}}"}, "traceId": "{{index .Request.Header "X-B3-Traceid"}}"}'
+    logging.request-log-template: {{`'{"httpRequest": {"requestMethod": "{{.Request.Method}}", "requestUrl": "{{js .Request.RequestURI}}", "requestSize": "{{.Request.ContentLength}}", "status": {{.Response.Code}}, "responseSize": "{{.Response.Size}}", "userAgent": "{{js .Request.UserAgent}}", "remoteIp": "{{js .Request.RemoteAddr}}", "serverIp": "{{.Revision.PodIP}}", "referer": "{{js .Request.Referer}}", "latency": "{{.Response.Latency}}s", "protocol": "{{.Request.Proto}}"}, "traceId": "{{index .Request.Header "X-B3-Traceid"}}"}'`}}
 
     # If true, the request logging will be enabled.
     # NB: up to and including Knative version 0.18 if logging.request-log-template is non-empty, this value
@@ -2067,6 +1445,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   annotations:
     knative.dev/example-checksum: "4002b4c2"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 data:
   _example: |
     ################################
@@ -2125,6 +1505,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   minReplicas: 1
   maxReplicas: 20
@@ -2151,6 +1534,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   minAvailable: 80%
   selector:
@@ -2179,6 +1565,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   selector:
     matchLabels:
@@ -2279,6 +1668,9 @@ metadata:
   labels:
     app: activator
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   selector:
     app: activator
@@ -2320,6 +1712,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   replicas: 1
   selector:
@@ -2412,6 +1807,9 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   name: autoscaler
   namespace: knative-serving
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   ports:
     # Define metrics and profiling for them to be accessible within service meshes.
@@ -2449,6 +1847,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   selector:
     matchLabels:
@@ -2521,6 +1922,9 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   name: controller
   namespace: knative-serving
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   ports:
     # Define metrics and profiling for them to be accessible within service meshes.
@@ -2555,6 +1959,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   minReplicas: 1
   maxReplicas: 5
@@ -2579,6 +1986,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   minAvailable: 80%
   selector:
@@ -2607,6 +2017,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   selector:
     matchLabels:
@@ -2702,6 +2115,9 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
   name: webhook
   namespace: knative-serving
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 spec:
   ports:
     # Define metrics and profiling for them to be accessible within service meshes.
@@ -2738,6 +2154,9 @@ metadata:
   name: config.webhook.serving.knative.dev
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 webhooks:
   - admissionReviewVersions: ["v1", "v1beta1"]
     clientConfig:
@@ -2774,6 +2193,9 @@ metadata:
   name: webhook.serving.knative.dev
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 webhooks:
   - admissionReviewVersions: ["v1", "v1beta1"]
     clientConfig:
@@ -2806,6 +2228,9 @@ metadata:
   name: validation.webhook.serving.knative.dev
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 webhooks:
   - admissionReviewVersions: ["v1", "v1beta1"]
     clientConfig:
@@ -2839,6 +2264,9 @@ metadata:
   namespace: knative-serving
   labels:
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-4"
 # The data is populated at install time.
 
 ---

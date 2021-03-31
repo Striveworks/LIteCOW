@@ -21,6 +21,9 @@ metadata:
   labels:
     app: "default-domain"
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-2"
 spec:
   template:
     metadata:
@@ -66,6 +69,9 @@ metadata:
   labels:
     app: default-domain
     serving.knative.dev/release: "v0.21.0"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-2"
 spec:
   selector:
     app: default-domain
