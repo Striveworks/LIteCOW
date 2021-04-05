@@ -2,12 +2,12 @@
 
 set -e
 
-REPO_URL="git@github.com:Striveworks/LIteCOW.git"
+REPO_URL="https://github.com/Striveworks/LIteCOW.git"
 
 clone_repo() {
   echo ""
   echo "Cloning repo..."
-  git clone "$REPO_URL" > /dev/null 2>&1
+  git clone "$REPO_URL" > /dev/null 2>&1 || echo "Failed to clone repo: ❌"
   cd LIteCOW
   echo "Repo cloned: ✅ "
 }
@@ -19,6 +19,7 @@ check_docker_installed() {
   if [ -x "$(command -v docker)" ]; then
     echo "Docker installed: ✅ "
   else
+      echo "Docker not installed: ❌"
       echo "Install docker and try again"
       echo "https://docs.docker.com/get-docker/"
   fi
