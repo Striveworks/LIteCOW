@@ -24,14 +24,14 @@ EOF
 
 
 #Create Kind cluster
-kind create cluster --name knative --config clusterconfig.yaml
+kind create cluster --name knative --config clusterconfig.yaml --wait 5m
 
 #Load ICOW service container into Kind cluster
 kind load docker-image --name knative dev.local/icow_service
 
 kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-crds.yaml
 kubectl apply --filename https://github.com/knative/serving/releases/download/v0.21.0/serving-core.yaml
-
+kubectl apply --filename https://github.com/knative/net-kourier/releases/download/v0.21.0/kourier.yaml
 
   kubectl patch configmap/config-network \
   --namespace knative-serving \
@@ -43,9 +43,7 @@ kubectl apply --filename https://github.com/knative/serving/releases/download/v0
     --type merge \
     --patch '{"data":{"127.0.0.1.nip.io":""}}'
 
-helm install --set minio.service.type=NodePort --skip-crds --create-namespace icow -n icow deployment/icow
-
-cat > kourier-patch.yaml <<EOF
+cat <<EOF | kubectl apply -f -
   apiVersion: v1
   kind: Service
   metadata:
@@ -70,7 +68,24 @@ cat > kourier-patch.yaml <<EOF
     type: NodePort
 EOF
 
-kubectl apply -f kourier-patch.yaml
+
+echo ""
+echo "Knative serving installed. Waiting for pods to be ready 🐢"
+echo ""
+
+kubectl wait --for=condition=ready pod --all -n knative-serving
+kubectl wait --for=condition=ready pod --all -n kourier-system
+
+echo ""
+echo "Knative serving ready. Installing litecow 💡🐄"
+echo ""
+
+helm install --set minio.service.type=NodePort --create-namespace icow -n icow deployment/icow
+
+kubectl wait --for=condition=ready ksvc --all -n icow
+echo ""
+echo "litecow ready 🎉 💡🐄 🎉"
+echo ""
 
 echo ""
 echo ""
