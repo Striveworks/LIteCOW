@@ -1,13 +1,16 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ICOW Service Install" href="install.html" /><link rel="prev" title="Inference with Collected ONNX Weights" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ICOW Service Install" href="install.html" /><link rel="prev" title="Inference with Collected ONNX Weights" href="index.html" />
 
-    <meta name="generator" content="sphinx-3.5.2, furo 2021.02.28.beta28"/>
+    <meta name="generator" content="sphinx-4.0.2, furo 2021.06.24.beta37"/>
         <title>Overview - litecow 0.1.0 documentation</title>
-      <link rel="stylesheet" href="_static/styles/furo.css?digest=be5985a4059b5c2cd56ed0804790452beca62674">
-    <link rel="stylesheet" href="_static/pygments.css">
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css" />
     
 
 
@@ -36,8 +39,7 @@
   --color-code-foreground: #d0d0d0;
   
   }
-</style><link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+</style><link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -141,30 +143,30 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="overview">
+        <section class="tex2jax_ignore mathjax_ignore" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
 <p><strong>ICOW</strong> and its free open source version <strong>lIteCOW</strong> provide the ability to quickly deploy and remotely call versioned machine learning models.</p>
 <p>Inference with Collected ONNX Weights or Inference COW/ICOW for short, is a project to provide the inference functionality of machine learning models without requiring the resources or dependencies to run such models locally. In addition to the ICOW project, the <strong>lIteCOW</strong> project provides a subset of ICOW inference features to the open source community for free.  These projects aim to provide these capabilities while adding as few dependencies as possible to the caller of the model and requiring minimal compute resources. Additionally these projects aim to remain small themselves so they primarily focus on providing remote use of machine learning models; features that add improvements to the way models are run, likely belong in upstream projects where they may benefit all users of the upstream project including ICOW and lIteCOW.</p>
-<div class="section" id="architecture">
+<section id="architecture">
 <h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
 <p><img alt="" src="_images/icow-diagram.png"/></p>
-</div>
-<div class="section" id="why-create-use-inference-cow">
+</section>
+<section id="why-create-use-inference-cow">
 <h2>Why create/use inference COW<a class="headerlink" href="#why-create-use-inference-cow" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="overcome-limitations-of-gpu-resources-when-creating-deploying-microservices">
+<section id="overcome-limitations-of-gpu-resources-when-creating-deploying-microservices">
 <h3>Overcome limitations of (GPU) resources when creating/deploying microservices<a class="headerlink" href="#overcome-limitations-of-gpu-resources-when-creating-deploying-microservices" title="Permalink to this headline">¶</a></h3>
 <p>When creating a microservice which relies on machine learning model(s) and deploying it through a container orchestration tool such as kubernetes there are limitations on where/how such a microservice can run. If the microservice is allowed to run on any node in the kubernetes cluster the microservice may not be run on a node with a gpu and while it will be easier to scale, it may be overall slower since allowing the microservice to deploy on any node in kubernetes prevents the microservice from using any accelerators. If the microservice is restricted to only nodes with the appropriate gpus then the microservice will have access to a gpu for acceleration however even when not in use the microservice will have full use of the gpu and no other services will be allowed to use that gpu. This makes scaling multiple microservices that require gpus within the same cluster difficult as they will compete for resources even when they are sitting idle. To overcome this issue the actual inference work that microservices need a gpu to accelerate can be extracted and performed in a single microservice which is shared among the cluster. With the inference work extracted to ICOW/lIteCOW the microservices that rely on machine learning models will be able to freely scale on any node without worrying about access to a gpu and when those microservices are sitting idle the ICOW/lIteCOW microservice will still be available to any other microservice that needs it.</p>
-</div>
-<div class="section" id="provide-a-language-independent-way-of-accessing-machine-learning-inference-capabilities">
+</section>
+<section id="provide-a-language-independent-way-of-accessing-machine-learning-inference-capabilities">
 <h3>Provide a language independent way of accessing machine learning inference capabilities<a class="headerlink" href="#provide-a-language-independent-way-of-accessing-machine-learning-inference-capabilities" title="Permalink to this headline">¶</a></h3>
 <p>To access machine learning inference capabilities often python is the first choice since that’s where the models were trained. However, its not only python developers that would like to incorporate machine learning inference into their applications and sometimes python isn’t well suited to the task at hand. To tackle this issue it would be nice to have a language independent definition of communication with machine learning models. While ICOW/lIteCOW implement their servers in python and provide reference client implementations in python, they define their services and requests with an Interface Definition Language protobuf and communicate to clients through the common protocol gRPC for remote procedure calls. If another client implementation becomes required the protobuf file which describes the communication can be used to generate a client in any language supported by the Protocol Compiler protoc.</p>
-</div>
-<div class="section" id="provide-the-ability-to-remotely-access-and-use-inference-models-as-services-with-acceleration">
+</section>
+<section id="provide-the-ability-to-remotely-access-and-use-inference-models-as-services-with-acceleration">
 <h3>Provide the ability to remotely access and use inference models as services with acceleration<a class="headerlink" href="#provide-the-ability-to-remotely-access-and-use-inference-models-as-services-with-acceleration" title="Permalink to this headline">¶</a></h3>
 <p>To make use of many machine learning models currently requires the direct import and use of the machine learning libraries used to train them. While this isn’t always a problem, it requires installing machine learning libraries locally, which can add a lot to the size of a microservice deployment. This also means projects that would like to utilize inference capabilities must depend on these machine learning libraries even for a single inference call. Additionally if the project calls for accelerated inference then the local machine would need to have a gpu available for acceleration. ICOW/lIteCOW provide the use of inference models remotely potentially with gpu acceleration while only requiring that a client follow the protocol, so a machine learning library won’t be needed to call inference, and if the remote has a gpu then all the callers will benefit.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
       </article>
       <footer>
@@ -239,12 +241,12 @@
       
     </aside>
   </main>
-</div>
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/main.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+    </body>
 </html>

@@ -1,13 +1,16 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ICOW Models" href="models.html" /><link rel="prev" title="ICOW Service Install" href="install.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ICOW Models" href="models.html" /><link rel="prev" title="ICOW Service Install" href="install.html" />
 
-    <meta name="generator" content="sphinx-3.5.2, furo 2021.02.28.beta28"/>
+    <meta name="generator" content="sphinx-4.0.2, furo 2021.06.24.beta37"/>
         <title>Sandbox - litecow 0.1.0 documentation</title>
-      <link rel="stylesheet" href="_static/styles/furo.css?digest=be5985a4059b5c2cd56ed0804790452beca62674">
-    <link rel="stylesheet" href="_static/pygments.css">
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css" />
     
 
 
@@ -36,8 +39,7 @@
   --color-code-foreground: #d0d0d0;
   
   }
-</style><link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+</style><link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -141,10 +143,10 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="sandbox">
+        <section class="tex2jax_ignore mathjax_ignore" id="sandbox">
 <h1>Sandbox<a class="headerlink" href="#sandbox" title="Permalink to this headline">¶</a></h1>
 <p>This sandbox tutorial is setup to make getting started with ICOW quickly</p>
-<div class="section" id="install">
+<section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">s</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Striveworks</span><span class="o">/</span><span class="n">LIteCOW</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">sandbox</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span> <span class="o">|</span> <span class="n">bash</span>
 
@@ -173,22 +175,22 @@ and access Minio at <a class="reference external" href="http://localhost:9000">h
 </tbody>
 </table></div>
 </div>
-</div>
-<div class="section" id="import-model">
+</section>
+<section id="import-model">
 <h2>Import Model<a class="headerlink" href="#import-model" title="Permalink to this headline">¶</a></h2>
 <p>Import your first model from the <a class="reference external" href="https://github.com/onnx/models">ONNX Model Zoo</a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">litecow</span> <span class="n">import</span><span class="o">-</span><span class="n">model</span> <span class="o">--</span><span class="n">source</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">onnx</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">vision</span><span class="o">/</span><span class="n">object_detection_segmentation</span><span class="o">/</span><span class="n">tiny</span><span class="o">-</span><span class="n">yolov3</span><span class="o">/</span><span class="n">model</span><span class="o">/</span><span class="n">tiny</span><span class="o">-</span><span class="n">yolov3</span><span class="o">-</span><span class="mf">11.</span><span class="n">onnx</span> <span class="n">tinyyolov3</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="object-detection">
+</section>
+<section id="object-detection">
 <h2>Object Detection<a class="headerlink" href="#object-detection" title="Permalink to this headline">¶</a></h2>
 <p>Run the sandbox python file to use the tinyyolov3 model that you just imported</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">s</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Striveworks</span><span class="o">/</span><span class="n">LIteCOW</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">sandbox</span><span class="o">/</span><span class="n">sandbox</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="o">-</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Striveworks</span><span class="o">/</span><span class="n">LIteCOW</span><span class="o">/</span><span class="n">raw</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">sandbox</span><span class="o">/</span><span class="n">cow</span><span class="o">.</span><span class="n">jpeg</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
       </article>
       <footer>
@@ -259,12 +261,12 @@ and access Minio at <a class="reference external" href="http://localhost:9000">h
       
     </aside>
   </main>
-</div>
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/main.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+    </body>
 </html>
