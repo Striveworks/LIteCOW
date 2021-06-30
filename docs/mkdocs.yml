@@ -1,0 +1,38 @@
+site_name: ICOW
+site_description: 'Release and use ML Models seemlessly'
+repo_name: 'Striveworks/LIteCOW'
+repo_url: 'https://github.com/Striveworks/LIteCOW'
+copyright: 'Copyright &copy; 2021 Striveworks'
+docs_dir: 'content'
+extra_css:
+  - extra.css
+
+
+nav:
+  - Home: index.md
+
+theme:
+  name: material
+  custom_dir: content/overrides
+  palette:
+    primary: white
+  icon:
+    logo: material/console-line
+    repo: fontawesome/brands/github
+  favicon: images/favicon.ico
+  features:
+    - navigation.instant
+    - navigation.expand
+
+plugins: []
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg

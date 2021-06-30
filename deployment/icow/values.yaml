@@ -1,0 +1,36 @@
+# Default values for icow.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: dev.local/icow_service
+  pullPolicy: IfNotPresent
+  tag: "latest" # replace with "gpu" if using gpu inference
+
+s3:
+  access_key: "minioadmin"
+  secret_key: "minioadmin"
+  endpoint: "http://icow-minio.icow.svc.cluster.local:9000"
+
+annotations: []
+
+resources: {}
+# replace {} with below to enable gpu support
+#  limits:
+#    nvidia.com/gpu: 1
+#  requests:
+#    nvidia.com/gpu: 1
+
+minio:
+  mode: distributed
+  # Number of drives attached to a node
+  drivesPerNode: 4
+  # Number of MinIO containers running
+  replicas: 2
+  # Number of expanded MinIO clusters
+  zones: 1
+  accessKey: "minioadmin"
+  secretKey: "minioadmin"
+
+  service:
+    type: ClusterIP
