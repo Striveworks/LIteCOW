@@ -114,7 +114,7 @@ class ICOWServicer(ICOWServicer):
             The requested model loaded into an inference session
         """
         parsed_url = urlparse(s3_path)
-        bucket_name, object_name = parsed_url.netloc, parsed_url.path
+        bucket_name, object_name = parsed_url.netloc, parsed_url.path.lstrip("/")
 
         if parsed_url.scheme != "s3":
             raise Exception("Model s3_path must follow s3 protocol")
