@@ -11,7 +11,9 @@ from litecow.common import common
 
 class ICOWClient:
     @classmethod
-    def create_with_channel_options(cls, endpoint, secure=False, credentials=None, options=None, compression=None):
+    def create_with_channel_options(
+        cls, endpoint, secure=False, credentials=None, options=None, compression=None
+    ):
         """Create grpc channel and injects in to the InferenceCowClient constructor
 
         Parameters:
@@ -62,7 +64,9 @@ class ICOWClient:
 
         if secure:
             if credentials is None:
-                raise Exception("Must provide credentials when creating secure connection")
+                raise Exception(
+                    "Must provide credentials when creating secure connection"
+                )
             channel = grpc.secure_channel(endpoint, credentials, options, compression)
         else:
             channel = grpc.insecure_channel(endpoint, options, compression)
@@ -90,14 +94,14 @@ class ICOWClient:
         outputs: Optional[List[str]] = None,
         model_version: Optional[str] = None,
     ) -> Dict[str, np.ndarray]:
-        """ Get inference with input arrays
+        """Get inference with input arrays
 
         Parameters
         ----------
         model_key : str
             The key to the model in s3.
         inputs : Union[Dict[str, np.ndarray], List[np.ndarray], np.ndarray]
-            The input(s) to run inference on may be a dict 
+            The input(s) to run inference on may be a dict
             mapping input names to arrays, a list of input arrays, or a single input array
         outputs : Optional[List[str]] = None
             The outputs of the inference to return, if
