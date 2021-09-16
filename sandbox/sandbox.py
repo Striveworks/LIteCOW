@@ -124,8 +124,7 @@ def main():
 	image_data = preprocess(image)
 	image_size = np.array([image.size[1], image.size[0]]).reshape(1, 2)
 
-	channel = grpc.insecure_channel("icow-service.icow.127.0.0.1.nip.io:80")
-	client = ICOWClient(channel)
+	client = ICOWClient.create_with_channel_options("icow-service.icow.127.0.0.1.nip.io:80")
 
 	feed_f = dict(zip(['input_1', 'image_shape'],(image_data, np.float32(np.array([image.size[1], image.size[0]]).reshape(1, 2)))))
 	results = client.get_inference("s3://models/tinyyolov3", feed_f)
