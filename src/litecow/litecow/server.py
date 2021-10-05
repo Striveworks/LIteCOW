@@ -8,7 +8,6 @@ from urllib.parse import urlparse
 import boto3
 import grpc
 from onnxruntime import InferenceSession
-import numpy as np
 
 from litecow.common.litecow_pb2_grpc import ICOWServicer, add_ICOWServicer_to_server
 from litecow.common import common
@@ -67,18 +66,21 @@ class ICOWServicer(ICOWServicer):
             context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
             context.set_details(f"Error occured while loading model from s3:\n{error}")
             raise error
-
         # get inputs ready for model
-        if request.HasField('named_inputs'):
+        if request.HasField("named_inputs"):
             inputs = common.unprepare_named_arrays(request.named_inputs)
-        elif request.HasField('unnamed_inputs'):
+        elif request.HasField("unnamed_inputs"):
             inputs = common.unprepare_array_list(request.unnamed_inputs)
-            inputs = {model_input.name:array for model_input, array in zip(model.get_inputs(), inputs)}
+            inputs = {
+                model_input.name: array
+                for model_input, array in zip(model.get_inputs(), inputs)
+            }
         else:
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             context.set_details("Client provided request without inputs")
-            raise ValueError("Request must have value for named_inputs or unnamed_inputs")
-
+            raise ValueError(
+                "Request must have value for named_inputs or unnamed_inputs"
+            )
         outputs = request.outputs
         try:
             result = model.run(outputs, inputs)
@@ -86,13 +88,14 @@ class ICOWServicer(ICOWServicer):
             context.set_code(grpc.StatusCode.UNKNOWN)
             context.set_details(f"Error occured while doing inference:\n{error}")
             raise error
-
         # label and prepare result to be sent
         output_labels = map(lambda x: x.name, model.get_outputs())
-        output_labels = filter(lambda x: x in outputs, output_labels) if outputs else output_labels
-        labeled_result = {name:array for name,array in zip(output_labels, result)}
+        output_labels = (
+            filter(lambda x: x in outputs, output_labels) if outputs else output_labels
+        )
+        labeled_result = {name: array for name, array in zip(output_labels, result)}
 
-        return common.prepare_named_arrays(labeled_result)
+        return common.prepare_named_objects(labeled_result)
 
     def _get_model_version_from_s3(
         self, s3_path: str, model_version: Optional[str]
@@ -124,8 +127,16 @@ class ICOWServicer(ICOWServicer):
         def is_correct_version(obj_version) -> Optional[Tuple[str, dict]]:
             version_id = obj_version["VersionId"]
             # check if any of the object_tags contain {"model-version":model_version}
-            object_tagging = self.s3_client.get_object_tagging(Bucket=bucket_name, Key=object_name, VersionId=version_id)["TagSet"]
-            has_right_version = any(map(lambda tag: tag["Key"] == "model-version" and tag["Value"] == model_version, object_tagging))
+            object_tagging = self.s3_client.get_object_tagging(
+                Bucket=bucket_name, Key=object_name, VersionId=version_id
+            )["TagSet"]
+            has_right_version = any(
+                map(
+                    lambda tag: tag["Key"] == "model-version"
+                    and tag["Value"] == model_version,
+                    object_tagging,
+                )
+            )
             return (version_id, object_tagging) if has_right_version else None
 
         # resolve version of obj

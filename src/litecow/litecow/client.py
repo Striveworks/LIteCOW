@@ -120,7 +120,7 @@ class ICOWClient:
         """
         # ensure inputs is formatted correctly
         if isinstance(inputs, Dict):
-            named_inputs = common.prepare_named_arrays(inputs)
+            named_inputs = common.prepare_named_objects(inputs)
         elif isinstance(inputs, List):
             unnamed_inputs = common.prepare_array_list(inputs)
         else:

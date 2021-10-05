@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x1clitecow/common/litecow.proto\"\xa3\x01\n\x10InferenceRequest\x12\x11\n\tmodel_key\x18\x01 \x01(\t\x12\x15\n\rmodel_version\x18\x02 \x01(\t\x12$\n\x0cnamed_inputs\x18\x03 \x01(\x0b\x32\x0c.NamedArraysH\x00\x12$\n\x0eunnamed_inputs\x18\x04 \x01(\x0b\x32\n.ArrayListH\x00\x12\x0f\n\x07outputs\x18\x05 \x03(\tB\x08\n\x06inputs\"\x7f\n\x0bNamedArrays\x12\x34\n\rname_to_array\x18\x01 \x03(\x0b\x32\x1d.NamedArrays.NameToArrayEntry\x1a:\n\x10NameToArrayEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x15\n\x05value\x18\x02 \x01(\x0b\x32\x06.Array:\x02\x38\x01\"#\n\tArrayList\x12\x16\n\x06\x61rrays\x18\x01 \x03(\x0b\x32\x06.Array\"\xb1\x01\n\x05\x41rray\x12\r\n\x05shape\x18\x01 \x03(\r\x12\"\n\x0b\x66loat_array\x18\x02 \x01(\x0b\x32\x0b.FloatArrayH\x00\x12$\n\x0c\x64ouble_array\x18\x03 \x01(\x0b\x32\x0c.DoubleArrayH\x00\x12\"\n\x0bint32_array\x18\x04 \x01(\x0b\x32\x0b.Int32ArrayH\x00\x12\"\n\x0bint64_array\x18\x05 \x01(\x0b\x32\x0b.Int64ArrayH\x00\x42\x07\n\x05\x61rray\"\x1c\n\nInt32Array\x12\x0e\n\x06values\x18\x01 \x03(\x05\"\x1c\n\nInt64Array\x12\x0e\n\x06values\x18\x01 \x03(\x03\"\x1c\n\nFloatArray\x12\x0e\n\x06values\x18\x01 \x03(\x02\"\x1d\n\x0b\x44oubleArray\x12\x0e\n\x06values\x18\x01 \x03(\x01\x32:\n\x04ICOW\x12\x32\n\rget_inference\x12\x11.InferenceRequest\x1a\x0c.NamedArrays\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x1clitecow/common/litecow.proto\"\xa3\x01\n\x10InferenceRequest\x12\x11\n\tmodel_key\x18\x01 \x01(\t\x12\x15\n\rmodel_version\x18\x02 \x01(\t\x12$\n\x0cnamed_inputs\x18\x03 \x01(\x0b\x32\x0c.NamedArraysH\x00\x12$\n\x0eunnamed_inputs\x18\x04 \x01(\x0b\x32\n.ArrayListH\x00\x12\x0f\n\x07outputs\x18\x05 \x03(\tB\x08\n\x06inputs\"\x7f\n\x0bNamedArrays\x12\x34\n\rname_to_array\x18\x01 \x03(\x0b\x32\x1d.NamedArrays.NameToArrayEntry\x1a:\n\x10NameToArrayEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x15\n\x05value\x18\x02 \x01(\x0b\x32\x06.Array:\x02\x38\x01\"#\n\tArrayList\x12\x16\n\x06\x61rrays\x18\x01 \x03(\x0b\x32\x06.Array\"\xd9\x01\n\x05\x41rray\x12\r\n\x05shape\x18\x01 \x03(\r\x12\"\n\x0b\x66loat_array\x18\x02 \x01(\x0b\x32\x0b.FloatArrayH\x00\x12$\n\x0c\x64ouble_array\x18\x03 \x01(\x0b\x32\x0c.DoubleArrayH\x00\x12\"\n\x0bint32_array\x18\x04 \x01(\x0b\x32\x0b.Int32ArrayH\x00\x12\"\n\x0bint64_array\x18\x05 \x01(\x0b\x32\x0b.Int64ArrayH\x00\x12&\n\ndict_array\x18\x06 \x01(\x0b\x32\x10.DictionaryArrayH\x00\x42\x07\n\x05\x61rray\"\x1c\n\nInt32Array\x12\x0e\n\x06values\x18\x01 \x03(\x05\"\x1c\n\nInt64Array\x12\x0e\n\x06values\x18\x01 \x03(\x03\"\x1c\n\nFloatArray\x12\x0e\n\x06values\x18\x01 \x03(\x02\"\x1d\n\x0b\x44oubleArray\x12\x0e\n\x06values\x18\x01 \x03(\x01\".\n\x0f\x44ictionaryArray\x12\x1b\n\x06values\x18\x01 \x03(\x0b\x32\x0b.Dictionary\"=\n\x05Value\x12\r\n\x03str\x18\x01 \x01(\tH\x00\x12\r\n\x03int\x18\x02 \x01(\x05H\x00\x12\x0f\n\x05\x66loat\x18\x03 \x01(\x02H\x00\x42\x05\n\x03val\";\n\x03Key\x12\r\n\x03str\x18\x01 \x01(\tH\x00\x12\r\n\x03int\x18\x02 \x01(\x05H\x00\x12\x0f\n\x05\x66loat\x18\x03 \x01(\x02H\x00\x42\x05\n\x03key\"0\n\x04Pair\x12\x11\n\x03key\x18\x01 \x01(\x0b\x32\x04.Key\x12\x15\n\x05value\x18\x02 \x01(\x0b\x32\x06.Value\"\"\n\nDictionary\x12\x14\n\x05pairs\x18\x01 \x03(\x0b\x32\x05.Pair2:\n\x04ICOW\x12\x32\n\rget_inference\x12\x11.InferenceRequest\x1a\x0c.NamedArrays\"\x00\x62\x06proto3'
 )
 
 
@@ -235,6 +235,13 @@ _ARRAY = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='dict_array', full_name='Array.dict_array', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -253,7 +260,7 @@ _ARRAY = _descriptor.Descriptor(
     fields=[]),
   ],
   serialized_start=365,
-  serialized_end=542,
+  serialized_end=582,
 )
 
 
@@ -284,8 +291,8 @@ _INT32ARRAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=544,
-  serialized_end=572,
+  serialized_start=584,
+  serialized_end=612,
 )
 
 
@@ -316,8 +323,8 @@ _INT64ARRAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=574,
-  serialized_end=602,
+  serialized_start=614,
+  serialized_end=642,
 )
 
 
@@ -348,8 +355,8 @@ _FLOATARRAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=604,
-  serialized_end=632,
+  serialized_start=644,
+  serialized_end=672,
 )
 
 
@@ -380,8 +387,213 @@ _DOUBLEARRAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=634,
-  serialized_end=663,
+  serialized_start=674,
+  serialized_end=703,
+)
+
+
+_DICTIONARYARRAY = _descriptor.Descriptor(
+  name='DictionaryArray',
+  full_name='DictionaryArray',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='values', full_name='DictionaryArray.values', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=705,
+  serialized_end=751,
+)
+
+
+_VALUE = _descriptor.Descriptor(
+  name='Value',
+  full_name='Value',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='str', full_name='Value.str', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='int', full_name='Value.int', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='float', full_name='Value.float', index=2,
+      number=3, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='val', full_name='Value.val',
+      index=0, containing_type=None,
+      create_key=_descriptor._internal_create_key,
+    fields=[]),
+  ],
+  serialized_start=753,
+  serialized_end=814,
+)
+
+
+_KEY = _descriptor.Descriptor(
+  name='Key',
+  full_name='Key',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='str', full_name='Key.str', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='int', full_name='Key.int', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='float', full_name='Key.float', index=2,
+      number=3, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='key', full_name='Key.key',
+      index=0, containing_type=None,
+      create_key=_descriptor._internal_create_key,
+    fields=[]),
+  ],
+  serialized_start=816,
+  serialized_end=875,
+)
+
+
+_PAIR = _descriptor.Descriptor(
+  name='Pair',
+  full_name='Pair',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='Pair.key', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='Pair.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=877,
+  serialized_end=925,
+)
+
+
+_DICTIONARY = _descriptor.Descriptor(
+  name='Dictionary',
+  full_name='Dictionary',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='pairs', full_name='Dictionary.pairs', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=927,
+  serialized_end=961,
 )
 
 _INFERENCEREQUEST.fields_by_name['named_inputs'].message_type = _NAMEDARRAYS
@@ -400,6 +612,7 @@ _ARRAY.fields_by_name['float_array'].message_type = _FLOATARRAY
 _ARRAY.fields_by_name['double_array'].message_type = _DOUBLEARRAY
 _ARRAY.fields_by_name['int32_array'].message_type = _INT32ARRAY
 _ARRAY.fields_by_name['int64_array'].message_type = _INT64ARRAY
+_ARRAY.fields_by_name['dict_array'].message_type = _DICTIONARYARRAY
 _ARRAY.oneofs_by_name['array'].fields.append(
   _ARRAY.fields_by_name['float_array'])
 _ARRAY.fields_by_name['float_array'].containing_oneof = _ARRAY.oneofs_by_name['array']
@@ -412,6 +625,31 @@ _ARRAY.fields_by_name['int32_array'].containing_oneof = _ARRAY.oneofs_by_name['a
 _ARRAY.oneofs_by_name['array'].fields.append(
   _ARRAY.fields_by_name['int64_array'])
 _ARRAY.fields_by_name['int64_array'].containing_oneof = _ARRAY.oneofs_by_name['array']
+_ARRAY.oneofs_by_name['array'].fields.append(
+  _ARRAY.fields_by_name['dict_array'])
+_ARRAY.fields_by_name['dict_array'].containing_oneof = _ARRAY.oneofs_by_name['array']
+_DICTIONARYARRAY.fields_by_name['values'].message_type = _DICTIONARY
+_VALUE.oneofs_by_name['val'].fields.append(
+  _VALUE.fields_by_name['str'])
+_VALUE.fields_by_name['str'].containing_oneof = _VALUE.oneofs_by_name['val']
+_VALUE.oneofs_by_name['val'].fields.append(
+  _VALUE.fields_by_name['int'])
+_VALUE.fields_by_name['int'].containing_oneof = _VALUE.oneofs_by_name['val']
+_VALUE.oneofs_by_name['val'].fields.append(
+  _VALUE.fields_by_name['float'])
+_VALUE.fields_by_name['float'].containing_oneof = _VALUE.oneofs_by_name['val']
+_KEY.oneofs_by_name['key'].fields.append(
+  _KEY.fields_by_name['str'])
+_KEY.fields_by_name['str'].containing_oneof = _KEY.oneofs_by_name['key']
+_KEY.oneofs_by_name['key'].fields.append(
+  _KEY.fields_by_name['int'])
+_KEY.fields_by_name['int'].containing_oneof = _KEY.oneofs_by_name['key']
+_KEY.oneofs_by_name['key'].fields.append(
+  _KEY.fields_by_name['float'])
+_KEY.fields_by_name['float'].containing_oneof = _KEY.oneofs_by_name['key']
+_PAIR.fields_by_name['key'].message_type = _KEY
+_PAIR.fields_by_name['value'].message_type = _VALUE
+_DICTIONARY.fields_by_name['pairs'].message_type = _PAIR
 DESCRIPTOR.message_types_by_name['InferenceRequest'] = _INFERENCEREQUEST
 DESCRIPTOR.message_types_by_name['NamedArrays'] = _NAMEDARRAYS
 DESCRIPTOR.message_types_by_name['ArrayList'] = _ARRAYLIST
@@ -420,6 +658,11 @@ DESCRIPTOR.message_types_by_name['Int32Array'] = _INT32ARRAY
 DESCRIPTOR.message_types_by_name['Int64Array'] = _INT64ARRAY
 DESCRIPTOR.message_types_by_name['FloatArray'] = _FLOATARRAY
 DESCRIPTOR.message_types_by_name['DoubleArray'] = _DOUBLEARRAY
+DESCRIPTOR.message_types_by_name['DictionaryArray'] = _DICTIONARYARRAY
+DESCRIPTOR.message_types_by_name['Value'] = _VALUE
+DESCRIPTOR.message_types_by_name['Key'] = _KEY
+DESCRIPTOR.message_types_by_name['Pair'] = _PAIR
+DESCRIPTOR.message_types_by_name['Dictionary'] = _DICTIONARY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 InferenceRequest = _reflection.GeneratedProtocolMessageType('InferenceRequest', (_message.Message,), {
@@ -486,6 +729,41 @@ DoubleArray = _reflection.GeneratedProtocolMessageType('DoubleArray', (_message.
   })
 _sym_db.RegisterMessage(DoubleArray)
 
+DictionaryArray = _reflection.GeneratedProtocolMessageType('DictionaryArray', (_message.Message,), {
+  'DESCRIPTOR' : _DICTIONARYARRAY,
+  '__module__' : 'litecow.common.litecow_pb2'
+  # @@protoc_insertion_point(class_scope:DictionaryArray)
+  })
+_sym_db.RegisterMessage(DictionaryArray)
+
+Value = _reflection.GeneratedProtocolMessageType('Value', (_message.Message,), {
+  'DESCRIPTOR' : _VALUE,
+  '__module__' : 'litecow.common.litecow_pb2'
+  # @@protoc_insertion_point(class_scope:Value)
+  })
+_sym_db.RegisterMessage(Value)
+
+Key = _reflection.GeneratedProtocolMessageType('Key', (_message.Message,), {
+  'DESCRIPTOR' : _KEY,
+  '__module__' : 'litecow.common.litecow_pb2'
+  # @@protoc_insertion_point(class_scope:Key)
+  })
+_sym_db.RegisterMessage(Key)
+
+Pair = _reflection.GeneratedProtocolMessageType('Pair', (_message.Message,), {
+  'DESCRIPTOR' : _PAIR,
+  '__module__' : 'litecow.common.litecow_pb2'
+  # @@protoc_insertion_point(class_scope:Pair)
+  })
+_sym_db.RegisterMessage(Pair)
+
+Dictionary = _reflection.GeneratedProtocolMessageType('Dictionary', (_message.Message,), {
+  'DESCRIPTOR' : _DICTIONARY,
+  '__module__' : 'litecow.common.litecow_pb2'
+  # @@protoc_insertion_point(class_scope:Dictionary)
+  })
+_sym_db.RegisterMessage(Dictionary)
+
 
 _NAMEDARRAYS_NAMETOARRAYENTRY._options = None
 
@@ -496,8 +774,8 @@ _ICOW = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=665,
-  serialized_end=723,
+  serialized_start=963,
+  serialized_end=1021,
   methods=[
   _descriptor.MethodDescriptor(
     name='get_inference',

@@ -35,6 +35,7 @@ message Array {
     DoubleArray double_array = 3; // double values
     Int32Array int32_array = 4; // int32 values
     Int64Array int64_array = 5; // int64 values
+    DictionaryArray dict_array =  6; // dict values 
   }
 }
 
@@ -56,4 +57,33 @@ message FloatArray {
 // message for a double (64 bit) array's values
 message DoubleArray {
   repeated double values = 1; // values of the cells in an array
+}
+
+message DictionaryArray {
+  repeated Dictionary values = 1; // values of the cells in an array
+}
+
+message Value {
+    oneof val {
+        string str = 1;
+        int32 int = 2; 
+        float float = 3;
+    }
+}
+
+message Key {
+    oneof key {
+        string str = 1;
+        int32 int = 2; 
+        float float = 3;
+    }
+}
+
+message Pair {
+   Key key = 1;
+   Value value = 2;
+}
+
+message Dictionary {
+   repeated Pair pairs = 1;
 }
